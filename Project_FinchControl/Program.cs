@@ -200,23 +200,172 @@ namespace Project_FinchControl
 
             DisplayScreenHeader("Light and Sound");
 
-            Console.WriteLine("\tThe Finch robot will not show off its glowing talent!");
+            Console.WriteLine("\tThe Finch robot will now sing you a glowing birthday song!");
             DisplayContinuePrompt();
 
-            for (int lightSoundLevel = 0; lightSoundLevel < 255; lightSoundLevel++)
-            {
-                finchRobot.setLED(lightSoundLevel, lightSoundLevel, lightSoundLevel);
-                finchRobot.noteOn(lightSoundLevel * 100);
+            finchRobot.noteOn(264);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(125);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(250);
+            finchRobot.noteOn(264);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(125);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(297);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(500);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(264);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(500);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(352);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(500);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(330);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(1000);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(250);
+            finchRobot.noteOn(264);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(125);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(250);
+            finchRobot.noteOn(264);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(125);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(297);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(500);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(264);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(500);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(396);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(500);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(352);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(1000);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(250);
+            finchRobot.noteOn(264);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(125);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(250);
+            finchRobot.noteOn(264);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(125);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(2642);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(500);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(440);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(500);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(352);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(250);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(352);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(125);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(330);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(500);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(297);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(1000);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(250);
+            finchRobot.noteOn(466);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(125);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(250);
+            finchRobot.noteOn(466);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(125);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(440);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(500);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(352);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(500);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(396);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(500);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 255, 0);
+            finchRobot.wait(125);
+            finchRobot.noteOn(352);
+            finchRobot.setLED(255, 0, 255);
+            finchRobot.wait(1000);
+            finchRobot.noteOff();
+            finchRobot.setLED(0, 0, 0);
 
-            }
-
-            
             DisplayMenuPrompt("Talent Show Menu");
         }
         /// <summary>
         /// *****************************************************************
         /// *               Talent Show > Dance                  *
         /// *****************************************************************
+        /// Finch spins around clockwise and counterclockwise faster and faster
         /// </summary>
         /// <param name="finchRobot">finch robot object</param>
         static void DisplayDance(Finch finchRobot)
@@ -252,6 +401,7 @@ namespace Project_FinchControl
         /// *****************************************************************
         /// *               Talent Show > Mixing it Up                 *
         /// *****************************************************************
+        /// Plays the star wars theme song and uses the red light and rotates the finch
         /// </summary>
         /// <param name="finchRobot">finch robot object</param>
         
