@@ -8,3 +8,13 @@ C:\Users\dougs\Documents\CIT 112\Project_FinchControl.MenuStarter\Project_FinchC
 C:\Users\dougs\Documents\CIT 112\Project_FinchControl.MenuStarter\Project_FinchControl\obj\Debug\Project_FinchControl.csproj.CopyComplete
 C:\Users\dougs\Documents\CIT 112\Project_FinchControl.MenuStarter\Project_FinchControl\obj\Debug\Project_FinchControl.exe
 C:\Users\dougs\Documents\CIT 112\Project_FinchControl.MenuStarter\Project_FinchControl\obj\Debug\Project_FinchControl.pdb
+C:\Users\dougs\Documents\CIT 112\FinchMission\Project_FinchControl\bin\Debug\Project_FinchControl.exe.config
+C:\Users\dougs\Documents\CIT 112\FinchMission\Project_FinchControl\bin\Debug\Project_FinchControl.exe
+C:\Users\dougs\Documents\CIT 112\FinchMission\Project_FinchControl\bin\Debug\Project_FinchControl.pdb
+C:\Users\dougs\Documents\CIT 112\FinchMission\Project_FinchControl\bin\Debug\FinchAPI.dll
+C:\Users\dougs\Documents\CIT 112\FinchMission\Project_FinchControl\bin\Debug\HidSharp.dll
+C:\Users\dougs\Documents\CIT 112\FinchMission\Project_FinchControl\obj\Debug\Project_FinchControl.csprojAssemblyReference.cache
+C:\Users\dougs\Documents\CIT 112\FinchMission\Project_FinchControl\obj\Debug\Project_FinchControl.csproj.CoreCompileInputs.cache
+C:\Users\dougs\Documents\CIT 112\FinchMission\Project_FinchControl\obj\Debug\Project_FinchControl.csproj.CopyComplete
+C:\Users\dougs\Documents\CIT 112\FinchMission\Project_FinchControl\obj\Debug\Project_FinchControl.exe
+C:\Users\dougs\Documents\CIT 112\FinchMission\Project_FinchControl\obj\Debug\Project_FinchControl.pdb
