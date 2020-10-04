@@ -8,10 +8,9 @@ namespace Project_FinchControl
 
     // **************************************************
     //
-    // Title: Finch Control - Menu Starter
-    // Description: Starter solution with the helper methods,
-    //              opening and closing screens, and the menu
+    // Title: Finch Control
     // Application Type: Console
+    // Description: Menus created, functions created
     // Author: Smyka, Doug
     // Dated Created: 10/4/2020
     // Last Modified: 10/4/2020
