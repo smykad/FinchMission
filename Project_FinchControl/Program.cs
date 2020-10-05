@@ -410,7 +410,7 @@ namespace Project_FinchControl
             Console.CursorVisible = false;
 
             DisplayScreenHeader("Mixing it Up");
-            Console.WriteLine("\tThe Finch robot will now play the star wars theme song while moving forward!");
+            Console.WriteLine("\tThe Finch robot will now play the star wars theme song and then does a little dance!");
             DisplayContinuePrompt();
 
             finchRobot.noteOn(300);
