@@ -410,7 +410,7 @@ namespace Project_FinchControl
             Console.CursorVisible = false;
 
             DisplayScreenHeader("Mixing it Up");
-            Console.WriteLine("\tThe Finch robot will now play the star wars theme song while dancing!");
+            Console.WriteLine("\tThe Finch robot will now play the star wars theme song while moving forward!");
             DisplayContinuePrompt();
 
             finchRobot.noteOn(300);
@@ -418,31 +418,31 @@ namespace Project_FinchControl
             finchRobot.wait(500);
             finchRobot.noteOff();
             finchRobot.setLED(0, 0, 0);
-            finchRobot.setMotors(50, -50);
+            finchRobot.setMotors(50, 50);
             finchRobot.noteOn(300);
             finchRobot.setLED(255, 0, 0);
             finchRobot.wait(500);
             finchRobot.noteOff();
             finchRobot.setLED(0, 0, 0);
-            finchRobot.setMotors(50, -50);
+            finchRobot.setMotors(50, 50);
             finchRobot.noteOn(300);
             finchRobot.setLED(255, 0, 0);
             finchRobot.wait(500);
             finchRobot.noteOff();
             finchRobot.setLED(0, 0, 0);
-            finchRobot.setMotors(50, -50);
+            finchRobot.setMotors(-50, -50);
             finchRobot.noteOn(250);
             finchRobot.setLED(255, 0, 0);
             finchRobot.wait(500);
             finchRobot.noteOff();
             finchRobot.setLED(0, 0, 0);
-            finchRobot.setMotors(50, -50);
+            finchRobot.setMotors(-50, -50);
             finchRobot.noteOn(250);
             finchRobot.setLED(255, 0, 0);
             finchRobot.wait(500);
             finchRobot.noteOff();
             finchRobot.setLED(0, 0, 0);
-            finchRobot.setMotors(50, -50);
+            finchRobot.setMotors(50, 50);
             finchRobot.noteOn(350);
             finchRobot.setLED(255, 0, 0);
             finchRobot.wait(250);
@@ -453,13 +453,13 @@ namespace Project_FinchControl
             finchRobot.wait(500);
             finchRobot.noteOff();
             finchRobot.setLED(0, 0, 0);
-            finchRobot.setMotors(50, -50);
+            finchRobot.setMotors(50, 50);
             finchRobot.noteOn(250);
             finchRobot.setLED(255, 0, 0);
             finchRobot.wait(500);
             finchRobot.noteOff();
             finchRobot.setLED(0, 0, 0);
-            finchRobot.setMotors(50, -50);
+            finchRobot.setMotors(-50, -50);
             finchRobot.noteOn(350);
             finchRobot.setLED(255, 0, 0);
             finchRobot.wait(250);
@@ -470,9 +470,24 @@ namespace Project_FinchControl
             finchRobot.wait(500);
             finchRobot.noteOff();
             finchRobot.setLED(0, 0, 0);
-            finchRobot.setMotors(50, -50);
+            finchRobot.setMotors(-50, -50);
             finchRobot.setMotors(0, 0);
 
+            for (int ledMotorNoteLevels = 0; ledMotorNoteLevels < 255; ledMotorNoteLevels++)
+            {
+                finchRobot.setLED(ledMotorNoteLevels, ledMotorNoteLevels, ledMotorNoteLevels);
+                finchRobot.wait(10);
+                finchRobot.setLED(0, 0, 0);
+                finchRobot.noteOn(ledMotorNoteLevels * 500);
+                finchRobot.wait(10);
+                finchRobot.noteOff();
+                finchRobot.setMotors(ledMotorNoteLevels, ledMotorNoteLevels);
+                finchRobot.wait(10);
+                finchRobot.setMotors(0, 0);
+                finchRobot.setMotors(-ledMotorNoteLevels, -ledMotorNoteLevels);
+                finchRobot.wait(10);
+                finchRobot.setMotors(0, 0);
+            }
 
             DisplayMenuPrompt("Talent Show Menu");
         }
