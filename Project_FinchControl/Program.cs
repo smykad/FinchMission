@@ -133,11 +133,11 @@ namespace Project_FinchControl
         /// *                     Talent Show Menu                          *
         /// *****************************************************************
         /// </summary>
-        static void DisplayTalentShowMenuScreen(Finch myFinch)
+        static void DisplayTalentShowMenuScreen(Finch finchRobot)
         {
             Console.CursorVisible = true;
 
-            bool quitTalentShowMenu = false;
+            bool quitMenu = false;
             string menuChoice;
 
             do
@@ -161,15 +161,15 @@ namespace Project_FinchControl
                 switch (menuChoice)
                 {
                     case "a":
-                        DisplayLightAndSound(myFinch);
+                        DisplayLightAndSound(finchRobot);
                         break;
 
                     case "b":
-                        DisplayDance(myFinch);
+                        DisplayDance(finchRobot);
                         break;
 
                     case "c":
-                        DisplayMixingItUp(myFinch);
+                        DisplayMixingItUp(finchRobot);
                         break;
 
                     case "d":
@@ -177,7 +177,7 @@ namespace Project_FinchControl
                         break;
 
                     case "q":
-                        quitTalentShowMenu = true;
+                        quitMenu = true;
                         break;
 
                     default:
@@ -187,7 +187,7 @@ namespace Project_FinchControl
                         break;
                 }
 
-            } while (!quitTalentShowMenu);
+            } while (!quitMenu);
         }
 
         /// <summary>
@@ -252,7 +252,8 @@ namespace Project_FinchControl
             DisplayMenuPrompt("Talent Show Menu");
         }
         #endregion
-        #region Talent show Methods
+
+        #region BEEPER MOVEMENT LIGHT METHODS
 
         /// <summary>
         /// recreating the console.beep() method for finch
@@ -590,14 +591,17 @@ namespace Project_FinchControl
         /// </summary>
         /// <param name="finchRobot">finch robot object</param>
 
-        static void DisplayDataRecorderMenuScreen(Finch myFinch)
+        static void DisplayDataRecorderMenuScreen(Finch finchRobot)
         {
             DisplayScreenHeader("Data Recorder");
 
             int numberOfDataPoints;
             double dataPointFrequency;
             double[] temperatures;
-            bool quitDataRecorderMenu = false;
+
+            Console.CursorVisible = true;
+
+            bool quitMenu = false;
             string menuChoice;
 
             do
@@ -621,7 +625,7 @@ namespace Project_FinchControl
                 switch (menuChoice)
                 {
                     case "a":
-                        
+                        numberOfDataPoints = DataRecorderDisplayGetNumberOfDataPoints();
                         break;
 
                     case "b":
@@ -637,7 +641,7 @@ namespace Project_FinchControl
                         break;
 
                     case "q":
-                        quitDataRecorderMenu = true;
+                        quitMenu = true;
                         break;
 
                     default:
@@ -647,21 +651,10 @@ namespace Project_FinchControl
                         break;
                 }
 
-            } while (!quitDataRecorderMenu);
+            } while (!quitMenu);
 
         }
-        /// <summary>
-        /// Prompt user for the frequency of readings in seconds
-        /// validate and convert the response to a double
-        /// echo the value to the user
-        /// return the value
-        /// </summary>
-        /// <returns></returns>
-        double  DataRecorderDisplayGetDataPointFrequency()
-        {
-            DisplayScreenHeader("Frequency of Data Points");
-            DisplayContinuePrompt();
-        }
+
         /// <summary>
         /// Prompt user for number of the reading
         /// validate and convert the user response to a int
@@ -669,11 +662,35 @@ namespace Project_FinchControl
         /// return the value
         /// </summary>
         /// <returns></returns>
-        int DataRecorderDisplayGetNumberOfDataPoints()
+        static int DataRecorderDisplayGetNumberOfDataPoints()
         {
             DisplayScreenHeader("Number of Data Points");
+
+            int numberOfDataPoints;
+            Console.Write("Enter a number: ");
+            numberOfDataPoints = IsValidInt();
+            Console.WriteLine("{0}", numberOfDataPoints);
+            DisplayContinuePrompt();
+
+            return numberOfDataPoints;
+            
+        }
+
+
+        /// <summary>
+        /// Prompt user for the frequency of readings in seconds
+        /// validate and convert the response to a double
+        /// echo the value to the user
+        /// return the value
+        /// </summary>
+        /// <returns></returns>
+        static double DataRecorderDisplayGetDataPointFrequency()
+        {
+            throw new NotImplementedException();
+            DisplayScreenHeader("Frequency of Data Points");
             DisplayContinuePrompt();
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -684,7 +701,7 @@ namespace Project_FinchControl
         double[] DataRecorderDisplayGetData(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
         {
             DisplayScreenHeader("");
-            double[] dataPointFrequency;
+            throw new NotImplementedException();
             Console.WriteLine("Display the number and frequency of data readings");
             Console.WriteLine("Prompt user app is ready to begin recording and ask them to press any key to continue");
             DisplayContinuePrompt();
@@ -692,7 +709,7 @@ namespace Project_FinchControl
             // echo the reading to the user
             // add the reading to the next element in the array
             // wait the number of seconds specified by the user
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < 5; i++)
             {
 
             }
@@ -882,6 +899,24 @@ namespace Project_FinchControl
             Console.WriteLine();
         }
 
+        #endregion
+
+        #region METHODS
+        public static int IsValidInt()
+        {
+            bool IsValidInt = false;
+            int validInt = 0;
+            while (!IsValidInt)
+            {
+                IsValidInt = int.TryParse(Console.ReadLine(), out validInt);
+                if (!IsValidInt)
+                {
+                    Console.WriteLine("Please enter a numeric value");
+                    IsValidInt = false;
+                }
+            }
+            return validInt;
+        }
         #endregion
     }
 }
