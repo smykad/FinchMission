@@ -13,7 +13,7 @@ namespace Project_FinchControl
     // Description: Menus created, functions created
     // Author: Smyka, Doug
     // Dated Created: 10/4/2020
-    // Last Modified: 10/4/2020
+    // Last Modified: 10/10/2020
     //
     // **************************************************
 
@@ -27,7 +27,7 @@ namespace Project_FinchControl
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            
+
             SetTheme();
 
             DisplayWelcomeScreen();
@@ -37,6 +37,7 @@ namespace Project_FinchControl
 
         #endregion
 
+        #region Theme
         /// <summary>
         /// setup the console theme
         /// </summary>
@@ -45,6 +46,7 @@ namespace Project_FinchControl
             Console.ForegroundColor = ConsoleColor.Green;
             Console.BackgroundColor = ConsoleColor.Black;
         }
+        #endregion
 
         #region MAIN MENU
         /// <summary>
@@ -203,6 +205,223 @@ namespace Project_FinchControl
             Console.WriteLine("\tThe Finch robot will now sing you a glowing birthday song!");
             DisplayContinuePrompt();
 
+            HappyBirthday(finchRobot);
+
+            DisplayMenuPrompt("Talent Show Menu");
+        }
+        /// <summary>
+        /// *****************************************************************
+        /// *               Talent Show > Dance                  *
+        /// *****************************************************************
+        /// Finch spins around clockwise and counterclockwise faster and faster
+        /// </summary>
+        /// <param name="finchRobot">finch robot object</param>
+        static void DisplayDance(Finch finchRobot)
+        {
+            Console.CursorVisible = false;
+
+            DisplayScreenHeader("Dance");
+            Console.WriteLine("\tThe Finch robot will now show off its moves!");
+            DisplayContinuePrompt();
+
+            SquareLeft(finchRobot);
+            SquareRight(finchRobot);
+
+            DisplayMenuPrompt("Talent Show Menu");
+
+        }
+
+        /// <summary>
+        /// *****************************************************************
+        /// *               Talent Show > Mixing it Up                 *
+        /// *****************************************************************
+        /// Plays the star wars theme song and uses the red light and rotates the finch
+        /// </summary>
+        /// <param name="finchRobot">finch robot object</param>
+
+        static void DisplayMixingItUp(Finch finchRobot)
+        {
+            Console.CursorVisible = false;
+
+            DisplayScreenHeader("Mixing it Up");
+            Console.WriteLine("\tThe Finch robot will now play the star wars theme song and then does a little dance!");
+            DisplayContinuePrompt();
+
+            StarWars(finchRobot);
+
+            DisplayMenuPrompt("Talent Show Menu");
+        }
+        #endregion
+        #region Talent show Methods
+
+        /// <summary>
+        /// recreating the console.beep() method for finch
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="hertz"></param>
+        /// <param name="time"></param>
+        static void Beep(Finch finchRobot, int hertz, int time)
+        {
+            finchRobot.noteOn(hertz);
+            finchRobot.wait(time);
+            finchRobot.noteOff();
+        }
+
+        /// <summary>
+        ///  method to turn on lights, set how long they're on, and then turn them off
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <param name="time"></param>
+        static void LEDOnOFFSleep(Finch finchRobot, int r, int g, int b, int time)
+        {
+            finchRobot.setLED(r, g, b);
+            finchRobot.wait(time);
+            finchRobot.setLED(0, 0, 0);
+        }
+
+        /// <summary>
+        /// method to rename sleep to save space
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="time"></param>
+        static void Sleep(Finch finchRobot, int time)
+        {
+            finchRobot.wait(time);
+        }
+
+        static void Motors(Finch finchRobot, int left, int right)
+        {
+            finchRobot.setMotors(left, right);
+            finchRobot.setMotors(0, 0);
+        }
+
+        #endregion
+
+        #region MOVEMENT
+
+
+        /// <summary>
+        /// Finch moves in a square pattern turninig right
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        static void SquareRight(Finch finchRobot)
+        {
+            TurnRight(finchRobot);
+            Forward(finchRobot, 1000);
+            Stop(finchRobot);
+            TurnRight(finchRobot);
+            Forward(finchRobot, 1000);
+            Stop(finchRobot);
+            TurnRight(finchRobot);
+            Forward(finchRobot, 1000);
+            Stop(finchRobot);
+            TurnRight(finchRobot);
+            Forward(finchRobot, 1000);
+            Stop(finchRobot);
+        }
+        /// <summary>
+        /// Finch moves in a square moving left
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        static void SquareLeft(Finch finchRobot)
+        {
+            TurnLeft(finchRobot);
+            Forward(finchRobot, 1000);
+            Stop(finchRobot);
+            TurnLeft(finchRobot);
+            Forward(finchRobot, 1000);
+            Stop(finchRobot);
+            TurnLeft(finchRobot);
+            Forward(finchRobot, 1000);
+            Stop(finchRobot);
+            TurnLeft(finchRobot);
+            Forward(finchRobot, 1000);
+            Stop(finchRobot);
+        }
+        /// <summary>
+        /// Move finch forward
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="duration"></param>
+        static void Forward(Finch finchRobot, int duration)
+        {
+            finchRobot.setMotors(100, 100);
+            Sleep(finchRobot, duration);
+        }
+        /// <summary>
+        /// Stop finch
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        static void Stop(Finch finchRobot)
+        {
+            finchRobot.setMotors(0, 0);
+        }
+
+        /// <summary>
+        /// Turn Finch left
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        static void TurnLeft(Finch finchRobot)
+        {
+            finchRobot.setMotors(-100, 100);
+            Sleep(finchRobot, 700);
+            finchRobot.setMotors(0, 0);
+        }
+        /// <summary>
+        /// Turn finch right
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        static void TurnRight(Finch finchRobot)
+        {
+            finchRobot.setMotors(100, -100);
+            Sleep(finchRobot, 700);
+            finchRobot.setMotors(0, 0);
+        }
+
+
+        #endregion
+
+        #region SONGS
+        /// <summary>
+        /// Star Wars song
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        static void StarWars(Finch finchRobot)
+        {
+            Beep(finchRobot, 300, 500);
+            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
+            Motors(finchRobot, 50, 50);
+            Beep(finchRobot, 300, 500);
+            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
+            Motors(finchRobot, 50, 50);
+            Beep(finchRobot, 300, 500);
+            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
+            Motors(finchRobot, -50, -50);
+            Beep(finchRobot, 250, 500);
+            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
+            Motors(finchRobot, 50, 50);
+            Beep(finchRobot, 350, 250);
+            Beep(finchRobot, 300, 500);
+            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
+            Motors(finchRobot, -50, -50);
+            Beep(finchRobot, 250, 500);
+            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
+            Motors(finchRobot, 50, 50);
+            Beep(finchRobot, 350, 250);
+            Beep(finchRobot, 300, 500);
+            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
+            Motors(finchRobot, 50, 50);
+        }
+
+       /// <summary>
+       /// Happy Birthday Song
+       /// </summary>
+       /// <param name="finchRobot"></param>
+        static void HappyBirthday(Finch finchRobot)
+        {
             finchRobot.noteOn(264);
             finchRobot.setLED(255, 0, 255);
             finchRobot.wait(125);
@@ -358,207 +577,6 @@ namespace Project_FinchControl
             finchRobot.wait(1000);
             finchRobot.noteOff();
             finchRobot.setLED(0, 0, 0);
-
-            DisplayMenuPrompt("Talent Show Menu");
-        }
-        /// <summary>
-        /// *****************************************************************
-        /// *               Talent Show > Dance                  *
-        /// *****************************************************************
-        /// Finch spins around clockwise and counterclockwise faster and faster
-        /// </summary>
-        /// <param name="finchRobot">finch robot object</param>
-        static void DisplayDance(Finch finchRobot)
-        {
-            Console.CursorVisible = false;
-
-            DisplayScreenHeader("Dance");
-            Console.WriteLine("\tThe Finch robot will now show off its moves!");
-            DisplayContinuePrompt();
-
-            for (int i = 0; i < 255; i++)
-            {
-                finchRobot.setMotors(i, -i);
-                finchRobot.wait(10);
-            }
-
-            finchRobot.setMotors(0, 0);
-
-            for (int i = 0; i < 255; i++)
-            {
-                finchRobot.setMotors(-i, i);
-                finchRobot.wait(10);
-            }
-
-            finchRobot.setMotors(0, 0);
-
-
-            DisplayMenuPrompt("Talent Show Menu");
-
-        }
-
-        /// <summary>
-        /// *****************************************************************
-        /// *               Talent Show > Mixing it Up                 *
-        /// *****************************************************************
-        /// Plays the star wars theme song and uses the red light and rotates the finch
-        /// </summary>
-        /// <param name="finchRobot">finch robot object</param>
-        
-        static void DisplayMixingItUp(Finch finchRobot)
-        {
-            Console.CursorVisible = false;
-
-            DisplayScreenHeader("Mixing it Up");
-            Console.WriteLine("\tThe Finch robot will now play the star wars theme song and then does a little dance!");
-            DisplayContinuePrompt();
-            
-            // block of code that works, can't test the new methods to see if they work or not
-            //finchRobot.noteOn(300);
-            //finchRobot.setLED(255, 0, 0);
-            //finchRobot.wait(500);
-            //finchRobot.noteOff();
-            //finchRobot.setLED(0, 0, 0);
-            //finchRobot.setMotors(50, 50);
-            //finchRobot.noteOn(300);
-            //finchRobot.setLED(255, 0, 0);
-            //finchRobot.wait(500);
-            //finchRobot.noteOff();
-            //finchRobot.setLED(0, 0, 0);
-            //finchRobot.setMotors(50, 50);
-            //finchRobot.noteOn(300);
-            //finchRobot.setLED(255, 0, 0);
-            //finchRobot.wait(500);
-            //finchRobot.noteOff();
-            //finchRobot.setLED(0, 0, 0);
-            //finchRobot.setMotors(-50, -50);
-            //finchRobot.noteOn(250);
-            //finchRobot.setLED(255, 0, 0);
-            //finchRobot.wait(500);
-            //finchRobot.noteOff();
-            //finchRobot.setLED(0, 0, 0);
-            //finchRobot.setMotors(-50, -50);
-            //finchRobot.noteOn(250);
-            //finchRobot.setLED(255, 0, 0);
-            //finchRobot.wait(500);
-            //finchRobot.noteOff();
-            //finchRobot.setLED(0, 0, 0);
-            //finchRobot.setMotors(50, 50);
-            //finchRobot.noteOn(350);
-            //finchRobot.setLED(255, 0, 0);
-            //finchRobot.wait(250);
-            //finchRobot.noteOff();
-            //finchRobot.setLED(0, 0, 0);
-            //finchRobot.noteOn(300);
-            //finchRobot.setLED(255, 0, 0);
-            //finchRobot.wait(500);
-            //finchRobot.noteOff();
-            //finchRobot.setLED(0, 0, 0);
-            //finchRobot.setMotors(50, 50);
-            //finchRobot.noteOn(250);
-            //finchRobot.setLED(255, 0, 0);
-            //finchRobot.wait(500);
-            //finchRobot.noteOff();
-            //finchRobot.setLED(0, 0, 0);
-            //finchRobot.setMotors(-50, -50);
-            //finchRobot.noteOn(350);
-            //finchRobot.setLED(255, 0, 0);
-            //finchRobot.wait(250);
-            //finchRobot.noteOff();
-            //finchRobot.setLED(0, 0, 0);
-            //finchRobot.noteOn(300);
-            //finchRobot.setLED(255, 0, 0);
-            //finchRobot.wait(500);
-            //finchRobot.noteOff();
-            //finchRobot.setLED(0, 0, 0);
-            //finchRobot.setMotors(-50, -50);
-            //finchRobot.setMotors(0, 0);
-
-            Beep(finchRobot, 300, 500);
-            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
-            Motors(finchRobot, 50, 50);
-            Beep(finchRobot, 300, 500);
-            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
-            Motors(finchRobot, 50, 50);
-            Beep(finchRobot, 300, 500);
-            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
-            Motors(finchRobot, -50, -50);
-            Beep(finchRobot, 250, 500);
-            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
-            Motors(finchRobot, 50, 50);
-            Beep(finchRobot, 350, 250);
-            Beep(finchRobot, 300, 500);
-            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
-            Motors(finchRobot, -50, -50);
-            Beep(finchRobot, 250, 500);
-            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
-            Motors(finchRobot, 50, 50);
-            Beep(finchRobot, 350, 250);
-            Beep(finchRobot, 300, 500);
-            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
-            Motors(finchRobot, 50, 50);
-
-            for (int ledMotorNoteLevels = 0; ledMotorNoteLevels < 255; ledMotorNoteLevels++)
-            {
-                finchRobot.setLED(ledMotorNoteLevels, ledMotorNoteLevels, ledMotorNoteLevels);
-                finchRobot.wait(10);
-                finchRobot.setLED(0, 0, 0);
-                finchRobot.noteOn(ledMotorNoteLevels * 500);
-                finchRobot.wait(10);
-                finchRobot.noteOff();
-                finchRobot.setMotors(ledMotorNoteLevels, ledMotorNoteLevels);
-                finchRobot.wait(10);
-                finchRobot.setMotors(0, 0);
-                finchRobot.setMotors(-ledMotorNoteLevels, -ledMotorNoteLevels);
-                finchRobot.wait(10);
-                finchRobot.setMotors(0, 0);
-            }
-
-            DisplayMenuPrompt("Talent Show Menu");
-        }
-
-        /// <summary>
-        /// recreating the console.beep() method for finch
-        /// </summary>
-        /// <param name="finchRobot"></param>
-        /// <param name="hertz"></param>
-        /// <param name="time"></param>
-        static void Beep(Finch finchRobot, int hertz, int time)
-        {
-            finchRobot.noteOn(hertz);
-            finchRobot.wait(time);
-            finchRobot.noteOff();
-        }
-        
-        /// <summary>
-        ///  method to turn on lights, set how long they're on, and then turn them off
-        /// </summary>
-        /// <param name="finchRobot"></param>
-        /// <param name="r"></param>
-        /// <param name="g"></param>
-        /// <param name="b"></param>
-        /// <param name="time"></param>
-        static void LEDOnOFFSleep(Finch finchRobot, int r, int g, int b, int time)
-        {
-            finchRobot.setLED(r, g, b);
-            finchRobot.wait(time);
-            finchRobot.setLED(0, 0, 0);
-        }
-
-        /// <summary>
-        /// method to rename sleep to save space
-        /// </summary>
-        /// <param name="finchRobot"></param>
-        /// <param name="time"></param>
-        static void Sleep(Finch finchRobot, int time)
-        {
-            finchRobot.wait(time);
-        }
-
-        static void Motors(Finch finchRobot, int left, int right)
-        {
-            finchRobot.setMotors(left, right);
-            finchRobot.setMotors(0, 0);
         }
 
         #endregion
@@ -572,12 +590,82 @@ namespace Project_FinchControl
         /// </summary>
         /// <param name="finchRobot">finch robot object</param>
 
-        static void DisplayDataRecorderMenuScreen(Finch finchRobot)
+        static void DisplayDataRecorderMenuScreen(Finch myFinch)
         {
             DisplayScreenHeader("Data Recorder");
-            Console.WriteLine("This module is under development");
+
+            int numberOfDataPoints;
+            double dataPointFrequency;
+            double[] temperatures;
+            bool quitDataRecorderMenu = false;
+            string menuChoice;
+
+            do
+            {
+                DisplayScreenHeader("Data Recorder Menu");
+
+                //
+                // get user menu choice
+                //
+                Console.WriteLine("\ta) Number of Data points");
+                Console.WriteLine("\tb) Frequency of Data points");
+                Console.WriteLine("\tc) Get Data");
+                Console.WriteLine("\td) Show Data");
+                Console.WriteLine("\tq) Main Menu");
+                Console.Write("\t\tEnter Choice:");
+                menuChoice = Console.ReadLine().ToLower();
+
+                //
+                // process user menu choice
+                //
+                switch (menuChoice)
+                {
+                    case "a":
+                        
+                        break;
+
+                    case "b":
+
+                        break;
+
+                    case "c":
+                        
+                        break;
+
+                    case "d":
+
+                        break;
+
+                    case "q":
+                        quitDataRecorderMenu = true;
+                        break;
+
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("\tPlease enter a letter for the menu choice.");
+                        DisplayContinuePrompt();
+                        break;
+                }
+
+            } while (!quitDataRecorderMenu);
+
+        }
+        /// <summary>
+        /// Prompt user for the frequency of readings in seconds
+        /// </summary>
+        /// <returns></returns>
+        double  DataRecorderDisplayGetDataPointFrequency()
+        {
+            DisplayScreenHeader("");
             DisplayContinuePrompt();
         }
+
+        int DataRecorderDisplayGetNumberOfDataPoints()
+        {
+            DisplayScreenHeader("");
+            DisplayContinuePrompt();
+        }
+
 
         #endregion
 
