@@ -652,17 +652,67 @@ namespace Project_FinchControl
         }
         /// <summary>
         /// Prompt user for the frequency of readings in seconds
+        /// validate and convert the response to a double
+        /// echo the value to the user
+        /// return the value
         /// </summary>
         /// <returns></returns>
         double  DataRecorderDisplayGetDataPointFrequency()
         {
-            DisplayScreenHeader("");
+            DisplayScreenHeader("Frequency of Data Points");
             DisplayContinuePrompt();
         }
-
+        /// <summary>
+        /// Prompt user for number of the reading
+        /// validate and convert the user response to a int
+        /// echo the value to the user
+        /// return the value
+        /// </summary>
+        /// <returns></returns>
         int DataRecorderDisplayGetNumberOfDataPoints()
         {
+            DisplayScreenHeader("Number of Data Points");
+            DisplayContinuePrompt();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="numberOfDataPoints"></param>
+        /// <param name="dataPointFrequency"></param>
+        /// <param name="finchRobot"></param>
+        /// <returns></returns>
+        double[] DataRecorderDisplayGetData(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
+        {
             DisplayScreenHeader("");
+            double[] dataPointFrequency;
+            Console.WriteLine("Display the number and frequency of data readings");
+            Console.WriteLine("Prompt user app is ready to begin recording and ask them to press any key to continue");
+            DisplayContinuePrompt();
+            // get a temperature reading from the Finch Robot
+            // echo the reading to the user
+            // add the reading to the next element in the array
+            // wait the number of seconds specified by the user
+            for (int i = 0; i < length; i++)
+            {
+
+            }
+            Console.WriteLine("State to the user that the data recording is complete");
+            DisplayContinuePrompt();
+            
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        static void DataRecorderDisplayDataTable(double[] data)
+        {
+            Console.WriteLine("Under development");
+        }
+
+        static void DataRecorderDisplayData(double[] data)
+        {
+            DisplayScreenHeader("");
+            //DataRecorderDisplayDataTable();
             DisplayContinuePrompt();
         }
 
