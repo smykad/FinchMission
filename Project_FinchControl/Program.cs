@@ -882,11 +882,19 @@ namespace Project_FinchControl
         static void DisplayWelcomeScreen()
         {
             Console.CursorVisible = false;
-
+            string welcome = "Finch Control";
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine("\tFinch Control");
+            Console.WriteLine(String.Format("{0,28}", welcome));
             Console.WriteLine();
+            Console.WriteLine(@"
+                        | 
+    ____________    __ -+-  ____________ 
+    \_____     /   /_ \ |   \     _____/
+     \_____    \____/  \____/    _____/
+      \_____   FINCH CONTROL    _____/
+         \___________  ___________/
+                   /____\");
 
             DisplayContinuePrompt();
         }
