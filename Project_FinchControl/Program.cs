@@ -631,6 +631,7 @@ namespace Project_FinchControl
                 Console.WriteLine("\tB: Frequency of Data points");
                 Console.WriteLine("\tC: Get Data");
                 Console.WriteLine("\tD: Show Data");
+                Console.WriteLine("\tE: Light Sensor");
                 Console.WriteLine("\tQ: Main Menu");
                 Console.WriteLine();
                 Console.WriteLine();                
@@ -658,6 +659,9 @@ namespace Project_FinchControl
                         DataRecorderDisplayData(temperatures);
                         break;
 
+                    case "e":
+                        DataRecorderDisplayLightSensor(numberOfDataPoints, dataPointFrequency, finchRobot);
+                        break;
                     case "q":
                         quitMenu = true;
                         break;
@@ -672,6 +676,29 @@ namespace Project_FinchControl
             } while (!quitMenu);
 
         }
+
+        static void DataRecorderDisplayLightSensor(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
+        {
+
+            int[][] lights = new int[numberOfDataPoints][];
+
+            DisplayScreenHeader("Lights");
+
+            Console.WriteLine(string.Format($"{"\tLeft Sensor",17}    {"Right Sensor",17}"));
+            
+
+            for (int i = 0; i < numberOfDataPoints; i++)
+            {
+                lights[i] = finchRobot.getLightSensors();
+                Console.WriteLine(string.Format($"{lights[i][0],14}{lights[i][1],20}"));
+                int wait = (int)(dataPointFrequency * 1000);
+                finchRobot.wait(wait);
+            }
+
+            DisplayContinuePrompt();
+        }
+
+
 
         /// <summary>
         /// Prompt user for number of the reading
