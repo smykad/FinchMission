@@ -186,7 +186,7 @@ namespace Project_FinchControl
 
                     default:
                         Console.WriteLine();
-                        Console.WriteLine("\tPlease enter a letter for the menu choice.");
+                        Console.WriteLine("\tThat is not a valid input");
                         DisplayContinuePrompt();
                         break;
                 }
@@ -255,22 +255,33 @@ namespace Project_FinchControl
 
             DisplayMenuPrompt("Talent Show Menu");
         }
-
+        /// <summary>
+        /// ********************************************************************
+        /// *           Talent Show > Buzzer                                   *
+        /// ********************************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
         static void DisplayBuzzer(Finch finchRobot)
         {
             DisplayScreenHeader("Buzzer");
-            Console.WriteLine("Enter the frequency in hertz you'd like to hear: ");
+            Console.Write("\tEnter the frequency in hertz you'd like to hear: ");
             int hertz = IsValidInt();
-            Console.WriteLine("Enter how long you would like the Finch to play this sound (in seconds): ");
+            Console.Write("\tEnter how long you would like the Finch to play this sound (in seconds): ");
             int time = IsValidInt()*1000;
-            Console.WriteLine($"The frequency you chose is {hertz}, it will play for {time/1000} seconds.");
+            Console.WriteLine();
+            Console.WriteLine($"\tThe frequency you chose is {hertz}, it will play for {time/1000} seconds.");
             DisplayContinuePrompt();
             Beep(finchRobot, hertz, time);
+            DisplayMenuPrompt("Talent Show Menu");
         }
         #endregion
 
-        #region BEEPER MOVEMENT LIGHT METHODS
+        #region BEEPERS AND LIGHTS OH MY
 
+        //
+        // *********************************************
+        // *        Methods for Finch Beeper and LEDs  *
+        // *********************************************
         /// <summary>
         /// recreating the console.beep() method for finch
         /// </summary>
@@ -319,6 +330,10 @@ namespace Project_FinchControl
 
         #region MOVEMENT
 
+        //
+        // *******************************************
+        // *    Methods for Movement of Ficnh        *
+        // *******************************************
 
         /// <summary>
         /// Finch moves in a square pattern turninig right
@@ -403,7 +418,9 @@ namespace Project_FinchControl
 
         #region SONGS
         /// <summary>
-        /// Star Wars song
+        /// *********************************************************
+        /// * Star Wars Song with movement functionality and lights *
+        /// *********************************************************
         /// </summary>
         /// <param name="finchRobot"></param>
         static void StarWars(Finch finchRobot)
@@ -433,10 +450,12 @@ namespace Project_FinchControl
             Motors(finchRobot, 50, 50);
         }
 
-       /// <summary>
-       /// Happy Birthday Song
-       /// </summary>
-       /// <param name="finchRobot"></param>
+        /// <summary>
+        /// ******************************************************
+        /// *       HAPPY BIRTHDAY SONG WITH LIGHTS              *
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
         static void HappyBirthday(Finch finchRobot)
         {
             finchRobot.noteOn(264);
@@ -602,7 +621,7 @@ namespace Project_FinchControl
 
         /// <summary>
         /// *****************************************************************
-        /// *                      Data Recorder                            *
+        /// *                      DATA RECORDER                            *
         /// *****************************************************************
         /// </summary>
         /// <param name="finchRobot">finch robot object</param>
@@ -676,42 +695,14 @@ namespace Project_FinchControl
             } while (!quitMenu);
 
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="numberOfDataPoints"></param>
-        /// <param name="dataPointFrequency"></param>
-        /// <param name="finchRobot"></param>
-        /// <returns></returns>
-        static int[][] DataRecorderDisplayGetLightSensorData(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
-        {
-
-            int[][] lights = new int[numberOfDataPoints][];
-
-            DisplayScreenHeader("Get Light Sensor Data");
-
-            //Console.WriteLine(string.Format($"{"\tLeft Sensor",17}    {"Right Sensor",17}"));
-            Console.WriteLine();
-
-            for (int i = 0; i < numberOfDataPoints; i++)
-            {
-                lights[i] = finchRobot.getLightSensors();
-                Console.WriteLine(string.Format($"\tReading: {i+1} {lights[i][0],14}{lights[i][1],20}"));
-                int wait = (int)(dataPointFrequency * 1000);
-                finchRobot.wait(wait);
-            }
-
-            DisplayContinuePrompt();
-            return lights;
-        }
+       
 
 
 
         /// <summary>
-        /// Prompt user for number of the reading
-        /// validate and convert the user response to a int
-        /// echo the value to the user
-        /// return the value
+        /// *********************************************************
+        /// *       DATA RECORDER > DATA POINTS                     *
+        /// ********************************************************* 
         /// </summary>
         /// <returns></returns>
         static int DataRecorderDisplayGetNumberOfDataPoints()
@@ -721,7 +712,7 @@ namespace Project_FinchControl
             int numberOfDataPoints;
             Console.Write("\tEnter a number of Data points you would like to collect: ");
             numberOfDataPoints = IsValidInt();
-            DisplayContinuePrompt();
+            DisplayMenuPrompt("Data Recorder Menu");
 
             return numberOfDataPoints;
             
@@ -729,10 +720,9 @@ namespace Project_FinchControl
 
 
         /// <summary>
-        /// Prompt user for the frequency of readings in seconds
-        /// validate and convert the response to a double
-        /// echo the value to the user
-        /// return the value
+        /// *********************************************************
+        /// *       DATA RECORDER > FREQUENCY                       *
+        /// ********************************************************* 
         /// </summary>
         /// <returns></returns>
         static double DataRecorderDisplayGetDataPointFrequency()
@@ -743,13 +733,15 @@ namespace Project_FinchControl
 
             Console.Write("\tEnter the frequency at which you would like to collect Data (in seconds): ");
             numberOfDataPoints = IsValidDouble();
-            DisplayContinuePrompt();
+            DisplayMenuPrompt("Data Recorder Menu");
 
             return numberOfDataPoints;
         }
 
         /// <summary>
-        /// 
+        /// *********************************************************
+        /// *       DATA RECORDER > GET TEMPERATURE                 *
+        /// ********************************************************* 
         /// </summary>
         /// <param name="numberOfDataPoints"></param>
         /// <param name="dataPointFrequency"></param>
@@ -776,20 +768,80 @@ namespace Project_FinchControl
                 finchRobot.wait(wait);
             }
 
-            DisplayContinuePrompt();
+            DisplayMenuPrompt("Data Recorder Menu");
 
             return temperatures;
             
         }
         /// <summary>
-        /// Prints the data into a table
+        /// *********************************************************
+        /// *       DATA RECORDER > GET LIGHT SENSOR DATA           *
+        /// ********************************************************* 
+        /// </summary>
+        /// <param name="numberOfDataPoints"></param>
+        /// <param name="dataPointFrequency"></param>
+        /// <param name="finchRobot"></param>
+        /// <returns></returns>
+        static int[][] DataRecorderDisplayGetLightSensorData(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
+        {
+
+            int[][] lights = new int[numberOfDataPoints][];
+
+            DisplayScreenHeader("Get Light Sensor Data");
+
+            Console.WriteLine($"\tNumber of Data points: {numberOfDataPoints}");
+            Console.WriteLine($"\tFrequency: {dataPointFrequency}");
+            Console.WriteLine();
+            Console.WriteLine("\tThe finch is ready to begin recording the Light Sensor data");
+            DisplayContinuePrompt();
+            Console.WriteLine();
+
+            //Console.WriteLine(string.Format($"{"\tLeft Sensor",17}    {"Right Sensor",17}"));
+            Console.WriteLine();
+
+            for (int i = 0; i < numberOfDataPoints; i++)
+            {
+                lights[i] = finchRobot.getLightSensors();
+                Console.WriteLine(string.Format($"\tReading: {i + 1} {lights[i][0],14}{lights[i][1],20}"));
+                int wait = (int)(dataPointFrequency * 1000);
+                finchRobot.wait(wait);
+            }
+
+            DisplayMenuPrompt("Data Recorder Menu");
+            return lights;
+        }
+        /// <summary>
+        /// ********************************************************
+        /// *       DATA RECORDER > DISPLAY DATA                   *
+        /// ********************************************************* 
+        /// </summary>
+        /// <param name="temperatures"></param>
+        static void DataRecorderDisplayData(double[] temperatures, int[][] lights)
+        {
+            DisplayScreenHeader("\t\tShow Data");
+
+            DataRecorderDisplayDataTable(temperatures, lights);
+
+            DisplayMenuPrompt("Data Recorder Menu");
+        }
+
+
+        /// <summary>
+        /// ********************************************************
+        /// *       DATA RECORDER METHOD FOR DISPLAYING DATA       *
+        /// ******************************************************** 
         /// </summary>
         /// <param name="temperatures"></param>
         static void DataRecorderDisplayDataTable(double[] temperatures, int[][]lights)
         {
-
+            // variables
+            //
+            double average;
+            string avg;
+            //
+            // Table Header for Temperatures in Celcius
+            //
             Console.WriteLine(string.Format($"{"Reading",17}    {"Temperature (Cº)",17}"));
-
             Console.WriteLine();
             for (int i = 0; i < temperatures.Length; i++)
             {
@@ -797,8 +849,19 @@ namespace Project_FinchControl
                 Console.WriteLine(string.Format($"{i+1,14}{temps,15}"));
             }
 
+            //
+            // Prints out the average temperature in Celcius
+            //
             Console.WriteLine();
+            average = Average(temperatures);
+            avg = average.ToString("n2");
+            
+            Console.WriteLine($"\tAverage Temperature (Cº): {avg}");
             Console.WriteLine();
+
+            //
+            // Table header for Temperatures in Farenheit
+            //
 
             Console.WriteLine(string.Format($"{"Reading",17}    {"Temperature (Fº)",17}"));
             Console.WriteLine();
@@ -810,30 +873,28 @@ namespace Project_FinchControl
                 Console.WriteLine(string.Format($"{i + 1,14}{temp,15}"));
             }
 
+            //
+            // Prints out the average temperatue in Farenheit
+            //
+            Console.WriteLine();
+            Console.WriteLine();
+            average = CelciusConversion(average);
+            avg = average.ToString("N2");
+            Console.WriteLine($"\tAverage Temperature (Fº): {avg}");
+            Console.WriteLine();
+
+            //
+            // Table Header for Light Sensor data
+            //
             Console.WriteLine();
             Console.WriteLine(string.Format($"{"Reading",17} {"Left Sensor",17} {"Right Sensor",17}"));
             Console.WriteLine();
 
             for (int i = 0; i < lights.Length; i++)
             {
-                Console.WriteLine(string.Format($" {i + 1,14} {lights[i][0],14}{lights[i][1],20}"));
+                Console.WriteLine(string.Format($" {i + 1,14} {lights[i][0],14}{lights[i][1],17}"));
             }
 
-        }
-
-
-
-        /// <summary>
-        /// Displays Data table with a header and prompts user to continue
-        /// </summary>
-        /// <param name="temperatures"></param>
-        static void DataRecorderDisplayData(double[] temperatures, int[][] lights)
-        {
-            DisplayScreenHeader("\t\tShow Data");
-
-            DataRecorderDisplayDataTable(temperatures, lights);
-
-            DisplayContinuePrompt();
         }
 
         #endregion
@@ -1012,6 +1073,18 @@ namespace Project_FinchControl
         #endregion
 
         #region METHODS
+        //
+        // **************************************************
+        // *   Methods to be used throughout the app        *
+        // **************************************************
+        //
+
+        /// <summary>
+        /// ******************************************************
+        /// * Prompts user for valid integer with error checking *
+        /// ******************************************************
+        /// </summary>
+        /// <returns></returns>
         public static int IsValidInt()
         {
             bool IsValidInt = false;
@@ -1021,13 +1094,19 @@ namespace Project_FinchControl
                 IsValidInt = int.TryParse(Console.ReadLine(), out validInt);
                 if (!IsValidInt)
                 {
+                    Console.WriteLine();
                     Console.Write("\tPlease enter an integer value: ");
                     IsValidInt = false;
                 }
             }
             return validInt;
         }
-
+        /// <summary>
+        /// ******************************************************
+        /// * Prompts user for valid double with error checking *
+        /// ******************************************************
+        /// </summary>
+        /// <returns></returns>
         public static double IsValidDouble()
         {
             bool IsValidDouble = false;
@@ -1037,6 +1116,7 @@ namespace Project_FinchControl
                 IsValidDouble = double.TryParse(Console.ReadLine(), out validDouble);
                 if (!IsValidDouble)
                 {
+                    Console.WriteLine();
                     Console.Write("\tPlease enter a numeric value: ");
                     IsValidDouble = false;
                 }
@@ -1045,13 +1125,35 @@ namespace Project_FinchControl
         }
 
         /// <summary>
-        /// Converts Celsius to Farenheit
+        /// ******************************************************
+        /// *           Converts Celcius to Farenheit             *
+        /// ******************************************************
         /// </summary>
         /// <returns></returns>
         public static double CelciusConversion(double celsius)
         {
             double fahrenheit = (celsius * 9) / 5 + 32;
             return fahrenheit;
+        }
+
+        /// <summary>
+        /// ******************************************************
+        /// *       Gives the average to a double Array          *
+        /// ******************************************************
+        /// </summary>
+        /// <param name="temperatures"></param>
+        /// <returns></returns>
+        static double Average( double[] temperatures)
+        {
+            double result = 0;
+
+            for (int i = 0; i < temperatures.Length; i++)
+            {
+                result += temperatures[i];
+            }
+
+            result = result / temperatures.Length;
+            return result;
         }
         #endregion
     }
