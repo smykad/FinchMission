@@ -687,7 +687,7 @@ namespace Project_FinchControl
 
                     default:
                         Console.WriteLine();
-                        Console.WriteLine("\tPlease enter a letter for the menu choice.");
+                        Console.WriteLine("\tThat is not a valid input");
                         DisplayContinuePrompt();
                         break;
                 }
