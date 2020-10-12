@@ -614,7 +614,7 @@ namespace Project_FinchControl
             int numberOfDataPoints = 0;
             double dataPointFrequency = 0;
             double[] temperatures = null;
-
+            int[][] lights = null;
             Console.CursorVisible = true;
 
             bool quitMenu = false;
@@ -629,13 +629,13 @@ namespace Project_FinchControl
                 //
                 Console.WriteLine("\tA: Number of Data points");
                 Console.WriteLine("\tB: Frequency of Data points");
-                Console.WriteLine("\tC: Get Data");
-                Console.WriteLine("\tD: Show Data");
-                Console.WriteLine("\tE: Light Sensor");
+                Console.WriteLine("\tC: Get Temperuture Data");
+                Console.WriteLine("\tD: Get Light Sensor Data");
+                Console.WriteLine("\tE: Show Data");
                 Console.WriteLine("\tQ: Main Menu");
                 Console.WriteLine();
                 Console.WriteLine();                
-                Console.Write("\tEnter Choice:");
+                Console.Write("\tEnter Choice: ");
                 menuChoice = Console.ReadLine().ToLower();
 
                 //
@@ -652,15 +652,15 @@ namespace Project_FinchControl
                         break;
 
                     case "c":
-                        temperatures = DataRecorderDisplayGetData(numberOfDataPoints, dataPointFrequency, finchRobot);
+                        temperatures = DataRecorderDisplayGetTemperatureData(numberOfDataPoints, dataPointFrequency, finchRobot);
                         break;
 
                     case "d":
-                        DataRecorderDisplayData(temperatures);
+                        lights = DataRecorderDisplayGetLightSensorData(numberOfDataPoints, dataPointFrequency, finchRobot);
                         break;
 
                     case "e":
-                        DataRecorderDisplayLightSensor(numberOfDataPoints, dataPointFrequency, finchRobot);
+                        DataRecorderDisplayData(temperatures, lights);
                         break;
                     case "q":
                         quitMenu = true;
@@ -676,26 +676,33 @@ namespace Project_FinchControl
             } while (!quitMenu);
 
         }
-
-        static void DataRecorderDisplayLightSensor(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="numberOfDataPoints"></param>
+        /// <param name="dataPointFrequency"></param>
+        /// <param name="finchRobot"></param>
+        /// <returns></returns>
+        static int[][] DataRecorderDisplayGetLightSensorData(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
         {
 
             int[][] lights = new int[numberOfDataPoints][];
 
-            DisplayScreenHeader("Lights");
+            DisplayScreenHeader("Get Light Sensor Data");
 
-            Console.WriteLine(string.Format($"{"\tLeft Sensor",17}    {"Right Sensor",17}"));
-            
+            //Console.WriteLine(string.Format($"{"\tLeft Sensor",17}    {"Right Sensor",17}"));
+            Console.WriteLine();
 
             for (int i = 0; i < numberOfDataPoints; i++)
             {
                 lights[i] = finchRobot.getLightSensors();
-                Console.WriteLine(string.Format($"{lights[i][0],14}{lights[i][1],20}"));
+                Console.WriteLine(string.Format($"\tReading: {i+1} {lights[i][0],14}{lights[i][1],20}"));
                 int wait = (int)(dataPointFrequency * 1000);
                 finchRobot.wait(wait);
             }
 
             DisplayContinuePrompt();
+            return lights;
         }
 
 
@@ -712,9 +719,8 @@ namespace Project_FinchControl
             DisplayScreenHeader("Number of Data Points");
 
             int numberOfDataPoints;
-            Console.Write("Enter a number: ");
+            Console.Write("\tEnter a number of Data points you would like to collect: ");
             numberOfDataPoints = IsValidInt();
-            Console.WriteLine("{0}", numberOfDataPoints);
             DisplayContinuePrompt();
 
             return numberOfDataPoints;
@@ -735,9 +741,8 @@ namespace Project_FinchControl
 
             double numberOfDataPoints;
 
-            Console.Write("Enter a number: ");
+            Console.Write("\tEnter the frequency at which you would like to collect Data (in seconds): ");
             numberOfDataPoints = IsValidDouble();
-            Console.WriteLine("{0}", numberOfDataPoints);
             DisplayContinuePrompt();
 
             return numberOfDataPoints;
@@ -750,18 +755,19 @@ namespace Project_FinchControl
         /// <param name="dataPointFrequency"></param>
         /// <param name="finchRobot"></param>
         /// <returns></returns>
-        static double[] DataRecorderDisplayGetData(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
+        static double[] DataRecorderDisplayGetTemperatureData(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
         {
             double[] temperatures = new double[numberOfDataPoints];
             
-            DisplayScreenHeader("Get Data");
+            DisplayScreenHeader("Get Temperature Data");
 
             
-            Console.WriteLine($"Number of Data points: {numberOfDataPoints}");
-            Console.WriteLine($"Frequency: {dataPointFrequency}");
-            Console.WriteLine("The finch is ready to begin recording the temperature data");
+            Console.WriteLine($"\tNumber of Data points: {numberOfDataPoints}");
+            Console.WriteLine($"\tFrequency: {dataPointFrequency}");
+            Console.WriteLine();
+            Console.WriteLine("\tThe finch is ready to begin recording the temperature data");
             DisplayContinuePrompt();
-
+            Console.WriteLine();
             for (int i = 0; i < numberOfDataPoints; i++)
             {
                 temperatures[i] = finchRobot.getTemperature();
@@ -779,27 +785,56 @@ namespace Project_FinchControl
         /// Prints the data into a table
         /// </summary>
         /// <param name="temperatures"></param>
-        static void DataRecorderDisplayDataTable(double[] temperatures)
+        static void DataRecorderDisplayDataTable(double[] temperatures, int[][]lights)
         {
-            Console.WriteLine(String.Format("{0, 20}  {1, 15}", "Recording", "Temperature"));
+
+            Console.WriteLine(string.Format($"{"Reading",17}    {"Temperature (Cº)",17}"));
+
+            Console.WriteLine();
             for (int i = 0; i < temperatures.Length; i++)
             {
-                Console.WriteLine(String.Format("{0, 20}  {1, 15}", i + 1, temperatures[i]));
+                string temps = temperatures[i].ToString("n2");
+                Console.WriteLine(string.Format($"{i+1,14}{temps,15}"));
             }
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+            Console.WriteLine(string.Format($"{"Reading",17}    {"Temperature (Fº)",17}"));
+            Console.WriteLine();
+            for (int i = 0; i < temperatures.Length; i++)
+            {
+                double celcius = temperatures[i];
+                double temperature = CelciusConversion(celcius);
+                string temp = temperature.ToString("n2");
+                Console.WriteLine(string.Format($"{i + 1,14}{temp,15}"));
+            }
+
+            Console.WriteLine();
+            Console.WriteLine(string.Format($"{"Reading",17} {"Left Sensor",17} {"Right Sensor",17}"));
+            Console.WriteLine();
+
+            for (int i = 0; i < lights.Length; i++)
+            {
+                Console.WriteLine(string.Format($" {i + 1,14} {lights[i][0],14}{lights[i][1],20}"));
+            }
+
         }
+
+
+
         /// <summary>
         /// Displays Data table with a header and prompts user to continue
         /// </summary>
         /// <param name="temperatures"></param>
-        static void DataRecorderDisplayData(double[] temperatures)
+        static void DataRecorderDisplayData(double[] temperatures, int[][] lights)
         {
-            DisplayScreenHeader("Show Data");
+            DisplayScreenHeader("\t\tShow Data");
 
-            DataRecorderDisplayDataTable(temperatures);
+            DataRecorderDisplayDataTable(temperatures, lights);
 
             DisplayContinuePrompt();
         }
-
 
         #endregion
 
@@ -986,7 +1021,7 @@ namespace Project_FinchControl
                 IsValidInt = int.TryParse(Console.ReadLine(), out validInt);
                 if (!IsValidInt)
                 {
-                    Console.WriteLine("Please enter a numeric value");
+                    Console.Write("\tPlease enter an integer value: ");
                     IsValidInt = false;
                 }
             }
@@ -1002,11 +1037,21 @@ namespace Project_FinchControl
                 IsValidDouble = double.TryParse(Console.ReadLine(), out validDouble);
                 if (!IsValidDouble)
                 {
-                    Console.WriteLine("Please enter a numeric value");
+                    Console.Write("\tPlease enter a numeric value: ");
                     IsValidDouble = false;
                 }
             }
             return validDouble;
+        }
+
+        /// <summary>
+        /// Converts Celsius to Farenheit
+        /// </summary>
+        /// <returns></returns>
+        public static double CelciusConversion(double celsius)
+        {
+            double fahrenheit = (celsius * 9) / 5 + 32;
+            return fahrenheit;
         }
         #endregion
     }
