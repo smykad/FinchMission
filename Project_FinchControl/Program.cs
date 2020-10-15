@@ -13,7 +13,7 @@ namespace Project_FinchControl
     // Description: Menus created, functions created
     // Author: Smyka, Doug
     // Dated Created: 10/4/2020
-    // Last Modified: 10/11/2020
+    // Last Modified: 10/15/2020
     //
     // **************************************************
 
@@ -911,6 +911,8 @@ namespace Project_FinchControl
         static void DisplayAlarmSystemMenuScreen(Finch finchRobot)
         {
             DisplayScreenHeader("Alarm System");
+            string sensorsToMonitor, rangeType;
+            int minMaxThresholdValue, timeToMonitor;
 
             bool quitMenu = false;
             string menuChoice;
@@ -921,11 +923,11 @@ namespace Project_FinchControl
                 //
                 // get user menu choice
                 //
-                Console.WriteLine("\tA: ");
-                Console.WriteLine("\tB: ");
-                Console.WriteLine("\tC: ");
-                Console.WriteLine("\tD: ");
-                Console.WriteLine("\tE: ");
+                Console.WriteLine("\tA: Set Sensors to Monitor");
+                Console.WriteLine("\tB: Set Range Type");
+                Console.WriteLine("\tC: Set Maximum/Minimum Threshold Value");
+                Console.WriteLine("\tD: Set Time to Monitor");
+                Console.WriteLine("\tE: Set Alarm");
                 Console.WriteLine("\tQ: Main Menu");
                 Console.WriteLine();
                 Console.WriteLine();
@@ -969,6 +971,102 @@ namespace Project_FinchControl
 
             } while (!quitMenu);
         }
+
+        /// <summary>
+        /// *****************************************************************
+        /// *               Alarm System  >             
+        /// *****************************************************************
+        /// </summary>
+        /// <returns></returns>
+        static string LightArmDisplaySetRange()
+        {
+            string max = "maximum";
+            string min = "minimum";
+            string range;
+            DisplayScreenHeader("");
+            Console.WriteLine("Maximum or minimum?");
+            range = isValidString(max, min);
+            DisplayMenuPrompt("Alarm System Menu");
+            return range;
+        }
+
+        /// <summary>
+        /// *****************************************************************
+        /// *               Alarm System  >             
+        /// *****************************************************************
+        /// </summary>
+        /// <param name="rangeType"></param>
+        /// <param name="finchRobot"></param>
+        /// <returns></returns>
+        static int LightAlarmDisplaySetMinMaxThresholdValue (string rangeType, Finch finchRobot)
+        {
+            int ThresholdValue;
+            DisplayScreenHeader("");
+            Console.Write($"Enter int for {rangeType}");
+            ThresholdValue = IsValidInt();
+            DisplayMenuPrompt("Alarm System Menu");
+            return ThresholdValue;
+        }
+        /// <summary>
+        /// *****************************************************************
+        /// *               Alarm System  >             
+        /// *****************************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <returns></returns>
+        static string LightAlarmDisplaySetSensorsToMonitor(Finch finchRobot)
+        {
+            
+            string sensorsToMonitor;
+            DisplayScreenHeader("");
+            // Don't know if this will work for displaying current values for the left and right light sensor
+            int[][] lights = DataRecorderDisplayGetLightSensorData(1, 0, finchRobot);
+            Console.WriteLine(string.Format($"\tReading: {lights[1][0],14}{lights[1][1],20}"));
+            Console.Write($"Enter which light sensors to monitor [left, right or both] : ");
+            sensorsToMonitor = Console.ReadLine();
+            DisplayMenuPrompt("Alarm System Menu");
+            return sensorsToMonitor;
+        }
+        /// <summary>
+        /// *****************************************************************
+        /// *               Alarm System  >             
+        /// *****************************************************************
+        /// </summary>
+        /// <returns></returns>
+        static int LightAlarmDisplaySetMaximumTimeToMonitor()
+        {
+            DisplayScreenHeader("");
+            int timeToMonitor;
+            Console.Write("Enter maximum number of seconds to monitor: ");
+            timeToMonitor = IsValidInt();
+            Console.WriteLine();
+            Console.WriteLine($"The numer of seconds you chose is {timeToMonitor}");
+            Console.WriteLine();
+            DisplayMenuPrompt("Alarm System Menu");
+            return timeToMonitor;
+        }
+
+        static void LightAlarmDisplaySetAlarm(Finch finchrobot, string sensorsToMonitor, string rangeType, double minMaxTHresholdValue, int timeToMonitor)
+        {
+            DisplayScreenHeader("");
+            // display alarm parameters
+            Console.WriteLine("The finch is ready to start the alarm");
+            DisplayContinuePrompt();
+            for (int i = 0; i < 0; i++)
+            {
+                // for loop monitor the correct sensors, average if necessary, echo the current light
+                // level and display a warning when the current light level exceeds the threshold value.
+            }
+
+            DisplayMenuPrompt("Alarm System Menu");
+
+        }
+
+        
+        // challenge
+        // develop a method to return the current light sensor value using the sensorsToMonitor value.
+        // Develop a method to display the current light level ina  fixed location of the screen
+        // Develop a method to display the elapsed time in a fixed location of the screen
 
 
         #endregion
@@ -1209,6 +1307,28 @@ namespace Project_FinchControl
 
             result = result / temperatures.Length;
             return result;
+        }
+         /// <summary>
+         /// Checks user input based on string
+         /// </summary>
+         /// <param name="validString"></param>
+         /// <param name="validStringTwo"></param>
+         /// <returns></returns>
+        static string isValidString(string validString, string validStringTwo)
+        {
+            bool IsValidString = false;
+            string userResponse;
+            userResponse = Console.ReadLine().ToLower();
+            while (!IsValidString)
+            {
+                if (userResponse != validString && userResponse != validStringTwo)
+                {
+                    Console.ReadLine();
+                    Console.Write("\tPlease enter a valid string response: ");
+                    IsValidString = false;
+                }
+            }
+            return validString;
         }
         #endregion
     }
