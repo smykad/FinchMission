@@ -911,8 +911,63 @@ namespace Project_FinchControl
         static void DisplayAlarmSystemMenuScreen(Finch finchRobot)
         {
             DisplayScreenHeader("Alarm System");
-            Console.WriteLine("This module is under development");
-            DisplayContinuePrompt();
+
+            bool quitMenu = false;
+            string menuChoice;
+            do
+            {
+                DisplayScreenHeader("Alarm System Menu");
+
+                //
+                // get user menu choice
+                //
+                Console.WriteLine("\tA: ");
+                Console.WriteLine("\tB: ");
+                Console.WriteLine("\tC: ");
+                Console.WriteLine("\tD: ");
+                Console.WriteLine("\tE: ");
+                Console.WriteLine("\tQ: Main Menu");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.Write("\tEnter Choice: ");
+                menuChoice = Console.ReadLine().ToLower();
+
+                //
+                // process user menu choice
+                //
+                switch (menuChoice)
+                {
+                    case "a":
+                        
+                        break;
+
+                    case "b":
+                        
+                        break;
+
+                    case "c":
+                        
+                        break;
+
+                    case "d":
+                        
+                        break;
+
+                    case "e":
+                        
+                        break;
+                    case "q":
+                        quitMenu = true;
+                        break;
+
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("\tThat is not a valid input");
+                        DisplayContinuePrompt();
+                        break;
+                }
+
+            } while (!quitMenu);
         }
 
 
