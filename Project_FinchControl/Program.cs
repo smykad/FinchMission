@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using FinchAPI;
+using System.Threading;
 
 namespace Project_FinchControl
 {
@@ -267,9 +268,9 @@ namespace Project_FinchControl
             Console.Write("\tEnter the frequency in hertz you'd like to hear: ");
             int hertz = IsValidInt();
             Console.Write("\tEnter how long you would like the Finch to play this sound (in seconds): ");
-            int time = IsValidInt()*1000;
+            int time = IsValidInt() * 1000;
             Console.WriteLine();
-            Console.WriteLine($"\tThe frequency you chose is {hertz}, it will play for {time/1000} seconds.");
+            Console.WriteLine($"\tThe frequency you chose is {hertz}, it will play for {time / 1000} seconds.");
             DisplayContinuePrompt();
             Beep(finchRobot, hertz, time);
             DisplayMenuPrompt("Talent Show Menu");
@@ -653,7 +654,7 @@ namespace Project_FinchControl
                 Console.WriteLine("\tE: Show Data");
                 Console.WriteLine("\tQ: Main Menu");
                 Console.WriteLine();
-                Console.WriteLine();                
+                Console.WriteLine();
                 Console.Write("\tEnter Choice: ");
                 menuChoice = Console.ReadLine().ToLower();
 
@@ -695,7 +696,7 @@ namespace Project_FinchControl
             } while (!quitMenu);
 
         }
-       
+
 
 
 
@@ -715,7 +716,7 @@ namespace Project_FinchControl
             DisplayMenuPrompt("Data Recorder Menu");
 
             return numberOfDataPoints;
-            
+
         }
 
 
@@ -750,10 +751,10 @@ namespace Project_FinchControl
         static double[] DataRecorderDisplayGetTemperatureData(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
         {
             double[] temperatures = new double[numberOfDataPoints];
-            
+
             DisplayScreenHeader("Get Temperature Data");
 
-            
+
             Console.WriteLine($"\tNumber of Data points: {numberOfDataPoints}");
             Console.WriteLine($"\tFrequency: {dataPointFrequency}");
             Console.WriteLine();
@@ -763,7 +764,7 @@ namespace Project_FinchControl
             for (int i = 0; i < numberOfDataPoints; i++)
             {
                 temperatures[i] = finchRobot.getTemperature();
-                Console.WriteLine($"\tReading {i+1}: {temperatures[i]:n2}");
+                Console.WriteLine($"\tReading {i + 1}: {temperatures[i]:n2}");
                 int wait = (int)(dataPointFrequency * 1000);
                 finchRobot.wait(wait);
             }
@@ -771,7 +772,7 @@ namespace Project_FinchControl
             DisplayMenuPrompt("Data Recorder Menu");
 
             return temperatures;
-            
+
         }
         /// <summary>
         /// *********************************************************
@@ -832,7 +833,7 @@ namespace Project_FinchControl
         /// ******************************************************** 
         /// </summary>
         /// <param name="temperatures"></param>
-        static void DataRecorderDisplayDataTable(double[] temperatures, int[][]lights)
+        static void DataRecorderDisplayDataTable(double[] temperatures, int[][] lights)
         {
             // variables
             //
@@ -846,7 +847,7 @@ namespace Project_FinchControl
             for (int i = 0; i < temperatures.Length; i++)
             {
                 string temps = temperatures[i].ToString("n2");
-                Console.WriteLine(string.Format($"{i+1,14}{temps,15}"));
+                Console.WriteLine(string.Format($"{i + 1,14}{temps,15}"));
             }
 
             //
@@ -855,7 +856,7 @@ namespace Project_FinchControl
             Console.WriteLine();
             average = Average(temperatures);
             avg = average.ToString("n2");
-            
+
             Console.WriteLine($"\tAverage Temperature (Cº): {avg}");
             Console.WriteLine();
 
@@ -940,23 +941,23 @@ namespace Project_FinchControl
                 switch (menuChoice)
                 {
                     case "a":
-                        
+
                         break;
 
                     case "b":
-                        
+
                         break;
 
                     case "c":
-                        
+
                         break;
 
                     case "d":
-                        
+
                         break;
 
                     case "e":
-                        
+
                         break;
                     case "q":
                         quitMenu = true;
@@ -998,7 +999,7 @@ namespace Project_FinchControl
         /// <param name="rangeType"></param>
         /// <param name="finchRobot"></param>
         /// <returns></returns>
-        static int LightAlarmDisplaySetMinMaxThresholdValue (string rangeType, Finch finchRobot)
+        static int LightAlarmDisplaySetMinMaxThresholdValue(string rangeType, Finch finchRobot)
         {
             int ThresholdValue;
             DisplayScreenHeader("");
@@ -1016,13 +1017,13 @@ namespace Project_FinchControl
         /// <returns></returns>
         static string LightAlarmDisplaySetSensorsToMonitor(Finch finchRobot)
         {
-            
+
             string sensorsToMonitor;
             DisplayScreenHeader("");
             // Don't know if this will work for displaying current values for the left and right light sensor
             int[][] lights = DataRecorderDisplayGetLightSensorData(1, 0, finchRobot);
             Console.WriteLine(string.Format($"\tReading: {lights[1][0],14}{lights[1][1],20}"));
-            Console.Write($"Enter which light sensors to monitor [left, right or both] : ");
+            Console.Write($"Enter which light sensors to monitor [left, right, both] : ");
             sensorsToMonitor = Console.ReadLine();
             DisplayMenuPrompt("Alarm System Menu");
             return sensorsToMonitor;
@@ -1062,7 +1063,7 @@ namespace Project_FinchControl
 
         }
 
-        
+
         // challenge
         // develop a method to return the current light sensor value using the sensorsToMonitor value.
         // Develop a method to display the current light level ina  fixed location of the screen
@@ -1296,7 +1297,7 @@ namespace Project_FinchControl
         /// </summary>
         /// <param name="temperatures"></param>
         /// <returns></returns>
-        static double Average( double[] temperatures)
+        static double Average(double[] temperatures)
         {
             double result = 0;
 
@@ -1308,12 +1309,12 @@ namespace Project_FinchControl
             result = result / temperatures.Length;
             return result;
         }
-         /// <summary>
-         /// Checks user input based on string
-         /// </summary>
-         /// <param name="validString"></param>
-         /// <param name="validStringTwo"></param>
-         /// <returns></returns>
+        /// <summary>
+        /// Checks user input based on string
+        /// </summary>
+        /// <param name="validString"></param>
+        /// <param name="validStringTwo"></param>
+        /// <returns></returns>
         static string isValidString(string validString, string validStringTwo)
         {
             bool IsValidString = false;
@@ -1330,6 +1331,73 @@ namespace Project_FinchControl
             }
             return validString;
         }
+
+        /// <summary>
+        ///  Method for counting up
+        /// </summary>
+        /// <param name="time"></param>
+        static void timer(int time, int left, int top)
+        {
+            for (int i = 1; i <= time; i++)
+            {
+                Console.SetCursorPosition(left, top);
+                Console.CursorVisible = false;
+                Console.WriteLine(i);
+                Thread.Sleep(1000);
+            }
+        }
+
+        /// <summary>
+        /// count down to 0 method
+        /// </summary>
+        /// <param name="time"></param>
+        static void countdown(int time, int left, int top)
+        {
+            for (int i = time; i >= 0; --i)
+            {
+                Console.CursorVisible = false;
+                if (i > 10)
+                {
+                    Console.SetCursorPosition(left, top);
+                    Console.WriteLine(i);
+                    Thread.Sleep(1000);
+                }
+                else
+                {
+                    Console.SetCursorPosition(left, top);
+                    Console.WriteLine(i + " ");
+                    Thread.Sleep(1000);
+                }
+            }
+        }
+
+        static void DisplayCurrentLightSensorValue(Finch finchRobot, string sensorsToMonitor)
+        {
+            int[][] lights = new int[1][];
+            lights[1] = finchRobot.getLightSensors();
+
+            if (sensorsToMonitor == "both")
+            {                
+                Console.WriteLine(string.Format($"\tLeft Sensor: {lights[1][0]} Right Sensor: {lights[1][1]}"));
+            }
+            else if (sensorsToMonitor == "left")
+            {
+                Console.WriteLine(string.Format($"\tLeft Sensor: {lights[1][0]}"));
+            }
+            else
+            {
+                Console.WriteLine(string.Format($"\tRight Sensor: {lights[1][1]}"));
+            }
+
+        }
+
+        static void DisplayCurrentLightSensorValueInFixedLocation(Finch finchRobot, string sensorsToMonitor, int left, int top)
+        {
+            Console.SetCursorPosition(left, top);
+            DisplayCurrentLightSensorValue(finchRobot, sensorsToMonitor);
+        }
+
+    
         #endregion
     }
 }
