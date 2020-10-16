@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using FinchAPI;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace Project_FinchControl
 {
@@ -947,9 +948,9 @@ namespace Project_FinchControl
                     case "b":
 
                         break;
-
+                        
                     case "c":
-
+                        sensorsToMonitor = LightArmDisplaySetRange();
                         break;
 
                     case "d":
@@ -981,12 +982,15 @@ namespace Project_FinchControl
         /// <returns></returns>
         static string LightArmDisplaySetRange()
         {
-            string max = "maximum";
-            string min = "minimum";
             string range;
-            DisplayScreenHeader("");
-            Console.WriteLine("Maximum or minimum?");
-            range = isValidString(max, min);
+
+            DisplayScreenHeader("Set Threshold");
+
+            Console.Write("\tPlease enter the string maximum or minimum: ");
+            range = isMinMax();
+            Console.WriteLine();
+            Console.WriteLine($"\tThe threshold you chose was: {range}");
+            DisplayContinuePrompt();
             DisplayMenuPrompt("Alarm System Menu");
             return range;
         }
@@ -1309,27 +1313,34 @@ namespace Project_FinchControl
             result = result / temperatures.Length;
             return result;
         }
-        /// <summary>
-        /// Checks user input based on string
-        /// </summary>
-        /// <param name="validString"></param>
-        /// <param name="validStringTwo"></param>
-        /// <returns></returns>
-        static string isValidString(string validString, string validStringTwo)
+    
+        static string isMinMax()
         {
             bool IsValidString = false;
-            string userResponse;
-            userResponse = Console.ReadLine().ToLower();
+            string minMax;
+
             while (!IsValidString)
             {
-                if (userResponse != validString && userResponse != validStringTwo)
+                minMax = Console.ReadLine().ToLower();
+                if (minMax == "maximum")
+                {
+                    
+                    IsValidString = true;
+                    
+                }
+                else if (minMax == "minimum")
+                {
+                    IsValidString = true;
+                    
+                }
+                else
                 {
                     Console.ReadLine();
-                    Console.Write("\tPlease enter a valid string response: ");
+                    Console.Write("\tPlease type one of the following choices [ maximum, minimum ]: ");
                     IsValidString = false;
                 }
             }
-            return validString;
+            return minMax;
         }
 
         /// <summary>
