@@ -1313,32 +1313,36 @@ namespace Project_FinchControl
             result = result / temperatures.Length;
             return result;
         }
-    
+
         static string isMinMax()
         {
-            bool IsValidString = false;
-            string minMax;
-
-            while (!IsValidString)
+            Console.Write("Please enter the range to monitor [ maximum, minimum ]: ");
+            string minMax = Console.ReadLine().ToLower();
+            bool isFalse = false;
+            while (!isFalse)
             {
-                minMax = Console.ReadLine().ToLower();
-                if (minMax == "maximum")
+
+                if (minMax == "maximum" || minMax == "max")
                 {
-                    
-                    IsValidString = true;
-                    
+                    minMax = "maximum";
+                    break;
                 }
-                else if (minMax == "minimum")
+                else if (minMax == "minimum" || minMax == "min")
                 {
-                    IsValidString = true;
-                    
+                    minMax = "minimum";
+                    break;
                 }
                 else
                 {
-                    Console.ReadLine();
-                    Console.Write("\tPlease type one of the following choices [ maximum, minimum ]: ");
-                    IsValidString = false;
+                    Console.Write("Please enter one of the following choices [ maximum, minimum ]: ");
+                    minMax = Console.ReadLine().ToLower();
+                    if (minMax != "maximum" || minMax != "minimum" || minMax != "max" || minMax != "min")
+                    {
+                        isFalse = false;
+                        continue;
+                    }
                 }
+                return minMax;
             }
             return minMax;
         }
