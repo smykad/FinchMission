@@ -451,6 +451,34 @@ namespace Project_FinchControl
             LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
             Motors(finchRobot, 50, 50);
         }
+        /// <summary>
+        /// *********************************************************
+        /// *       Star Wars Song with lights no movement          *
+        /// *********************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        static void StarWarsNoMotors(Finch finchRobot)
+        {
+            Beep(finchRobot, 300, 500);
+            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);           
+            Beep(finchRobot, 300, 500);
+            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);            
+            Beep(finchRobot, 300, 500);
+            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);            
+            Beep(finchRobot, 250, 500);
+            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);            
+            Beep(finchRobot, 350, 250);
+            Beep(finchRobot, 300, 500);
+            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);            
+            Beep(finchRobot, 250, 500);
+            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);           
+            Beep(finchRobot, 350, 250);
+            Beep(finchRobot, 300, 500);
+            LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
+            
+        }
+
+
 
         /// <summary>
         /// ******************************************************
@@ -952,7 +980,7 @@ namespace Project_FinchControl
                         break;
                         
                     case "c":
-                        LightAlarmDisplaySetMinMaxThresholdValue(rangeType, finchRobot);
+                        minMaxThresholdValue = LightAlarmDisplaySetMinMaxThresholdValue(rangeType);
                         break;
 
                     case "d":
@@ -1025,7 +1053,7 @@ namespace Project_FinchControl
         /// <param name="rangeType"></param>
         /// <param name="finchRobot"></param>
         /// <returns></returns>
-        static int LightAlarmDisplaySetMinMaxThresholdValue(string rangeType, Finch finchRobot)
+        static int LightAlarmDisplaySetMinMaxThresholdValue(string rangeType)
         {
             int thresholdValue;
             DisplayScreenHeader("Maximum/Minimum Threshold Value");
@@ -1057,7 +1085,7 @@ namespace Project_FinchControl
             return timeToMonitor;
         }
 
-        static void LightAlarmDisplaySetAlarm(Finch finchrobot, string sensorsToMonitor, string rangeType, double minMaxThresholdValue, int timeToMonitor)
+        static void LightAlarmDisplaySetAlarm(Finch finchRobot, string sensorsToMonitor, string rangeType, int minMaxThresholdValue, int timeToMonitor)
         {
             DisplayScreenHeader("Moniotr Light Sensor");
 
@@ -1068,17 +1096,67 @@ namespace Project_FinchControl
             Console.WriteLine();
             Console.WriteLine("\tPress any key to start monitoring ...");
             Console.ReadKey();
-            DisplayCurrentLightSensorValue(finchrobot, sensorsToMonitor, timeToMonitor, 0, 17);
-            //DisplayCurrentLightSensorValue(finchrobot, sensorsToMonitor, timeToMonitor);
-            
-           // timer(timeToMonitor, 0, 45);
+            //DisplayCurrentLightSensorValue(finchRobot, sensorsToMonitor, timeToMonitor, 5, 10);
 
-
-            DisplayMenuPrompt("Alarm System Menu");
+            Alarm(finchRobot, rangeType, minMaxThresholdValue, sensorsToMonitor, timeToMonitor);
 
         }
 
+        static void Alarm(Finch finchRobot, string rangeType, double minMaxThresholdValue, string sensorsToMonitor, int timeToMonitor)
+        {
+            int timeElapsed = 0;
+            bool threshold = false;
+            int currentLightSensorValue = 0;
 
+            while (timeElapsed < timeToMonitor && !threshold)
+            {
+
+                currentLightSensorValue = LeftRightBothSensorValue(finchRobot, sensorsToMonitor);
+
+                DisplayCurrentLightSensorValues(finchRobot, sensorsToMonitor, timeToMonitor, timeElapsed, 5, 10);
+
+                switch (rangeType)
+                {
+                    case "minimum":
+                        if (currentLightSensorValue < minMaxThresholdValue)
+                        {
+                            
+                            StarWarsNoMotors(finchRobot);
+                            threshold = true;
+                        }
+
+                        break;
+                    case "maximum":
+                        if (currentLightSensorValue > minMaxThresholdValue)
+                        {
+                            
+                            StarWarsNoMotors(finchRobot);
+                            threshold = true;
+                        }
+                        break;
+
+                }
+                finchRobot.wait(1000);
+                timeElapsed++;
+            }
+            Threshold(threshold, rangeType, currentLightSensorValue, minMaxThresholdValue);
+        }
+
+        static void Threshold(bool threshold, string rangeType, int currentLightSensorValue, double minMaxThresholdValue)
+        {
+            if (threshold)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"\tThe {rangeType} threshold {minMaxThresholdValue} was exceeded by the current sensor value: {currentLightSensorValue}");
+            }
+            if (!threshold)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"\tThe {rangeType} threshold {minMaxThresholdValue} was not exceeded by the current sensor value: {currentLightSensorValue}");
+            }
+
+            DisplayMenuPrompt("Alarm System Menu");
+        }
         // challenge
         // develop a method to return the current light sensor value using the sensorsToMonitor value.
         // Develop a method to display the current light level ina  fixed location of the screen
@@ -1241,7 +1319,7 @@ namespace Project_FinchControl
 
         #endregion
 
-        #region METHODS
+        #region VALIDATION METHODS
         //
         // **************************************************
         // *   Methods to be used throughout the app        *
@@ -1435,6 +1513,11 @@ namespace Project_FinchControl
             return minMax;
         }
 
+
+
+        #endregion
+
+        #region MISCELLANEOUS METHODS
         /// <summary>
         ///  Method for counting up
         /// </summary>
@@ -1473,13 +1556,14 @@ namespace Project_FinchControl
                 }
             }
         }
+        #endregion
 
-
+        #region SENSOR METHODS
         static void DisplayLeftAndRightSensorValue(Finch finchRobot)
         {
             int leftLight = finchRobot.getLeftLightSensor();
             int rightLight = finchRobot.getRightLightSensor();
-     
+
             Console.WriteLine($"\tCurrent ambient left light sensor level  :  {leftLight}");
             Console.WriteLine($"\tCurrent ambient right light sensor level :  {rightLight}");
             Console.WriteLine();
@@ -1488,13 +1572,13 @@ namespace Project_FinchControl
         {
             int[][] lights = new int[timeToMonitor][];
 
-            // for (int i = 0; i < timeToMonitor; i++)
             if (sensorsToMonitor == "both")
             {
                 for (int i = 0; i < timeToMonitor; i++)
                 {
                     Console.SetCursorPosition(left, top);
-                    Console.WriteLine($"\t{i}");
+                    Console.WriteLine($"\tTime Elapsed: {i}");
+                    Console.WriteLine();
                     lights[i] = finchRobot.getLightSensors();
                     Console.WriteLine(string.Format($"\tL: {lights[i][0]} R: {lights[i][1]}"));
                     finchRobot.wait(1000);
@@ -1506,7 +1590,8 @@ namespace Project_FinchControl
                 for (int i = 0; i < timeToMonitor; i++)
                 {
                     Console.SetCursorPosition(left, top);
-                    Console.WriteLine($"\t{i}");
+                    Console.WriteLine($"\tTime Elapsed: {i}");
+                    Console.WriteLine();
                     lights[i] = finchRobot.getLightSensors();
                     Console.WriteLine(string.Format($"\tL: {lights[i][0]}"));
                     finchRobot.wait(1000);
@@ -1517,7 +1602,8 @@ namespace Project_FinchControl
                 for (int i = 0; i < timeToMonitor; i++)
                 {
                     Console.SetCursorPosition(left, top);
-                    Console.WriteLine($"\t{i}");
+                    Console.WriteLine($"\tTime Elapsed: {i}");
+                    Console.WriteLine();
                     lights[i] = finchRobot.getLightSensors();
                     Console.WriteLine(string.Format($"\tR: {lights[i][1]}"));
                     finchRobot.wait(1000);
@@ -1525,10 +1611,83 @@ namespace Project_FinchControl
             }
         }
 
+        static void DisplayCurrentLightSensorValues(Finch finchRobot, string sensorsToMonitor, int timeToMonitor, int timeElapsed, int left, int top)
+        {
+            int[][] lights = new int[timeToMonitor][];
 
+            if (sensorsToMonitor == "both")
+            {  
+                    Console.SetCursorPosition(left, top);
+                    Console.WriteLine($"\tTime Elapsed: {timeElapsed}");
+                    Console.WriteLine();
+                    lights[0] = finchRobot.getLightSensors();
+                    Console.WriteLine(string.Format($"\tL: {lights[0][0]} R: {lights[0][1]}"));
+            }
+            else if (sensorsToMonitor == "left")
+            {                
+                    Console.SetCursorPosition(left, top);
+                    Console.WriteLine($"\tTime Elapsed: {timeElapsed}");
+                    Console.WriteLine();
+                    lights[0] = finchRobot.getLightSensors();
+                    Console.WriteLine(string.Format($"\tL: {lights[0][0]}"));                
+            }
+            else
+            {                
+                    Console.SetCursorPosition(left, top);
+                    Console.WriteLine($"\tTime Elapsed: {timeElapsed}");
+                    Console.WriteLine();
+                    lights[0] = finchRobot.getLightSensors();
+                    Console.WriteLine(string.Format($"\tR: {lights[0][1]}"));    
+            }
+        }
+        static int GetCurrentLeftSensorValue(Finch finchRobot)
+        {
+            int leftsensor = finchRobot.getLeftLightSensor();
+            return leftsensor;
+        }
 
+        static int GetCurrentRightSensorValue(Finch finchRobot)
+        {
+            int rightsensor = finchRobot.getRightLightSensor();
+            return rightsensor;
+        }
+        static int[][] GetLeftAndRightSensorValue(Finch finchRobot)
+        {
+            int[][] lights = new int[0][];
+            lights[0] = finchRobot.getLightSensors();
+            return lights;
+        }
+        static int LeftRightBothSensorValue(Finch finchRobot, string sensorsToMonitor)
+        {
+            int currentLightsensorValue = 0;
+            switch (sensorsToMonitor)
+            {
+                case "left":
+                    currentLightsensorValue = GetCurrentLeftSensorValue(finchRobot);
+                    break;
+                case "right":
+                    currentLightsensorValue = GetCurrentRightSensorValue(finchRobot);
+                    break;
+                case "both":
+                    currentLightsensorValue = ((GetCurrentLeftSensorValue(finchRobot) + GetCurrentRightSensorValue(finchRobot)) / 2);
+                    break;
+            }
+            return currentLightsensorValue;
+        }
 
-    
+        static double GetTempNow(Finch finchRobot)
+        {
+            double temp = finchRobot.getTemperature();
+            return temp;
+        }
+        static void DisplayTempNow(Finch finchRobot, int timeElapsed, int left, int top)
+        {
+            Console.SetCursorPosition(left, top);
+            Console.WriteLine($"\tTime Elapsed: {timeElapsed}");
+            Console.WriteLine();
+            GetTempNow(finchRobot);
+            Console.WriteLine(string.Format($"\tL: {temp}"));
+        }
         #endregion
     }
 }
