@@ -15,7 +15,7 @@ namespace Project_FinchControl
     // Description: Menus created, functions created
     // Author: Smyka, Doug
     // Dated Created: 10/4/2020
-    // Last Modified: 10/15/2020
+    // Last Modified: 10/18/2020
     //
     // **************************************************
 
@@ -825,8 +825,6 @@ namespace Project_FinchControl
             Console.WriteLine("\tThe finch is ready to begin recording the Light Sensor data");
             DisplayContinuePrompt();
             Console.WriteLine();
-
-            //Console.WriteLine(string.Format($"{"\tLeft Sensor",17}    {"Right Sensor",17}"));
             Console.WriteLine();
 
             for (int i = 0; i < numberOfDataPoints; i++)
@@ -933,21 +931,31 @@ namespace Project_FinchControl
 
         /// <summary>
         /// *****************************************************************
-        /// *                      Alarm System                            *
+        /// *                      ALARM SYSTEM                            *
         /// *****************************************************************
         /// </summary>
         /// <param name="finchRobot">finch robot object</param>
 
         static void DisplayAlarmSystemMenuScreen(Finch finchRobot)
         {
+            //
+            // display header
+            //
             DisplayScreenHeader("Alarm System");
+
+            //
+            // initialize variables
+            //
             string sensorsToMonitor = "";
             string rangeType = "";
             int minMaxThresholdValue = 0;
+            double minMaxTemperatureValue = 0;
             int timeToMonitor = 0;
 
             bool quitMenu = false;
             string menuChoice;
+
+
             do
             {
                 DisplayScreenHeader("Alarm System Menu");
@@ -958,8 +966,9 @@ namespace Project_FinchControl
                 Console.WriteLine("\tA: Set Sensors to Monitor");
                 Console.WriteLine("\tB: Set Range Type");
                 Console.WriteLine("\tC: Set Maximum/Minimum Threshold Value");
-                Console.WriteLine("\tD: Set Time to Monitor");
-                Console.WriteLine("\tE: Set Alarm");
+                Console.WriteLine("\tD: Set Maximum/Minimum Temperature Value");
+                Console.WriteLine("\tE: Set Time to Monitor");                
+                Console.WriteLine("\tF: Set Light Alarm");                
                 Console.WriteLine("\tQ: Main Menu");
                 Console.WriteLine();
                 Console.WriteLine();
@@ -972,24 +981,28 @@ namespace Project_FinchControl
                 switch (menuChoice)
                 {
                     case "a":
-                        sensorsToMonitor = LightAlarmDisplaySetSensorsToMonitor(finchRobot);
+                        sensorsToMonitor = AlarmDisplaySetSensorsToMonitor(finchRobot);
                         break;
 
                     case "b":
-                        rangeType = LightArmDisplaySetRangeType();
+                        rangeType = AlarmDisplaySetRangeType();
                         break;
                         
                     case "c":
-                        minMaxThresholdValue = LightAlarmDisplaySetMinMaxThresholdValue(rangeType);
+                        minMaxThresholdValue = AlarmDisplaySetMinMaxThresholdValue(finchRobot, rangeType);
                         break;
 
                     case "d":
-                        timeToMonitor = LightAlarmDisplaySetMaximumTimeToMonitor();
+                        minMaxTemperatureValue = AlarmDisplaySetMinMaxTemperatureValue(finchRobot, rangeType);
                         break;
 
                     case "e":
-                        LightAlarmDisplaySetAlarm(finchRobot, sensorsToMonitor, rangeType, minMaxThresholdValue, timeToMonitor);
+                        timeToMonitor = AlarmDisplaySetMaximumTimeToMonitor();
                         break;
+                    case "f":
+                        AlarmSetAlarm(finchRobot, sensorsToMonitor, rangeType, minMaxThresholdValue, timeToMonitor, minMaxTemperatureValue);
+                        break;
+                    
                     case "q":
                         quitMenu = true;
                         break;
@@ -1003,76 +1016,157 @@ namespace Project_FinchControl
 
             } while (!quitMenu);
         }
+        
 
 
         /// <summary>
         /// *****************************************************************
-        /// *               Alarm System  >  Set Sensors To Monitor         *      
+        /// *               ALARM SYSTEM  >  SET SENSORS TO MONITOR         *      
         /// *****************************************************************
         /// </summary>
         /// <param name="finchRobot"></param>
         /// <returns></returns>
-        static string LightAlarmDisplaySetSensorsToMonitor(Finch finchRobot)
+        static string AlarmDisplaySetSensorsToMonitor(Finch finchRobot)
         {
 
             string sensorsToMonitor;
             DisplayScreenHeader("Set sensors to Monitor");
             DisplayLeftAndRightSensorValue(finchRobot);
+            
+            // prompt user for light sensors they wish to monitor
+            // use method LeftRightBoth to validate their input
+
             sensorsToMonitor = LeftRightBoth();
             Console.WriteLine();
+
+            //
+            // echo user input
+            //
+
             Console.WriteLine($"\tSensors to Monitor: {sensorsToMonitor}");
             DisplayMenuPrompt("Alarm System Menu");
+
+            // return input
+
             return sensorsToMonitor;
         }
 
         /// <summary>
         /// *****************************************************************
-        /// *               Alarm System  >   Set Range Type                *          
+        /// *               ALARM SYSTEM  >   SET RANGE TYPE                *          
         /// *****************************************************************
         /// </summary>
         /// <returns></returns>
-        static string LightArmDisplaySetRangeType()
+        static string AlarmDisplaySetRangeType()
         {
             string range;
 
             DisplayScreenHeader("Set Range Type");
 
+            // prompt user for range value
+            // use method IsMinMax to validate their input
+            
             range = IsMinMax();
             Console.WriteLine();
+            
+            // echo user input back
+
             Console.WriteLine($"\tThe threshold you chose was: {range}");
             DisplayContinuePrompt();
             DisplayMenuPrompt("Alarm System Menu");
+
+            // return input
+
             return range;
         }
 
         /// <summary>
         /// *****************************************************************
-        /// *     Alarm System  >  Set Maximum/Minimum Threshold  Value     *  
+        /// *     ALARM SYSTEM  >  SET MAXIMUM/MINIMUM THRESHOLD VALUE      *  
         /// *****************************************************************
         /// </summary>
         /// <param name="rangeType"></param>
         /// <param name="finchRobot"></param>
         /// <returns></returns>
-        static int LightAlarmDisplaySetMinMaxThresholdValue(string rangeType)
+        static int AlarmDisplaySetMinMaxThresholdValue(Finch finchRobot, string rangeType)
         {
             int thresholdValue;
             DisplayScreenHeader("Maximum/Minimum Threshold Value");
+
+            // display left and right sensor value
+
+            Console.WriteLine();
+            DisplayLeftAndRightSensorValue(finchRobot);
+
+            // prompt user for input
+
             Console.Write($"\tEnter the {rangeType} threshold value: ");
+
+            // validate user input with method IsValidInt
+
             thresholdValue = IsValidInt();
+
+            // validate user input is within the proper range using
+            // method isValidThresholdAndRange
+
             thresholdValue = isValidThresholdAndRange(thresholdValue, 255, 0);
             Console.WriteLine();
+
+            // echo back user input
+
             Console.WriteLine($"\tLight sensor {rangeType} value: {thresholdValue}");
             DisplayMenuPrompt("Alarm System Menu");
+
+            // return user input
+
             return thresholdValue;
         }
-        
+
         /// <summary>
         /// *****************************************************************
-        /// *               Alarm System  >  Set Time to Monitor            *
+        /// *          ALARM SYSTEM  > SET MINIMUM/MAXIMUM TEMPERATURE      *      
+        /// *****************************************************************
+        /// </summary>
+        /// <param name="rangeType"></param>
+        /// <returns></returns>
+        static double AlarmDisplaySetMinMaxTemperatureValue(Finch finchRobot, string rangeType)
+        {
+            double temperatureValue;
+            double tempNow = GetTempNow(finchRobot);
+            DisplayScreenHeader("Maximum/Minimum Temperature Value");
+
+            // display current temperature
+
+            Console.WriteLine();
+            Console.WriteLine(string.Format($"\tCurrent temperature: {tempNow:n0}"));
+            Console.WriteLine();
+            
+
+            // prompt user for input
+
+            Console.Write($"\tEnter the {rangeType} threshold value: ");
+
+            // validate user input using method IsValidInt
+
+            temperatureValue = IsValidInt();
+            Console.WriteLine();
+
+            // echo back user input
+
+            Console.WriteLine($"\tTemperature sensor {rangeType} value: {temperatureValue}");
+            DisplayMenuPrompt("Alarm System Menu");
+
+            // return user input
+
+            return temperatureValue;
+        }
+        /// <summary>
+        /// *****************************************************************
+        /// *               ALARM SYSTEM  >  SET TIME TO MONITOR            *
         /// *****************************************************************
         /// </summary>
         /// <returns></returns>
-        static int LightAlarmDisplaySetMaximumTimeToMonitor()
+        static int AlarmDisplaySetMaximumTimeToMonitor()
         {
             DisplayScreenHeader("Maximum time to Monitor");
             int timeToMonitor;
@@ -1085,84 +1179,142 @@ namespace Project_FinchControl
             return timeToMonitor;
         }
 
-        static void LightAlarmDisplaySetAlarm(Finch finchRobot, string sensorsToMonitor, string rangeType, int minMaxThresholdValue, int timeToMonitor)
+        /// <summary>
+        /// *****************************************************************
+        /// *               ALARM SYSTEM  >  SET LIGHT ALARM                *
+        /// *****************************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="sensorsToMonitor"></param>
+        /// <param name="rangeType"></param>
+        /// <param name="minMaxThresholdValue"></param>
+        /// <param name="timeToMonitor"></param>
+        static void AlarmSetAlarm(Finch finchRobot, string sensorsToMonitor, string rangeType, int minMaxThresholdValue, int timeToMonitor, double minMaxTemperatureValue)
+
+
         {
-            DisplayScreenHeader("Moniotr Light Sensor");
+            DisplayScreenHeader("Monitor Light Sensor");
+
+            // echo back all the input user has given you
 
             Console.WriteLine($"\tSensors to monitor: {sensorsToMonitor}");
             Console.WriteLine($"\tRange type: {rangeType}");
             Console.WriteLine($"\tThe {rangeType} threshold value: {minMaxThresholdValue}");
+            Console.WriteLine($"\tThe {rangeType} temperature value: {minMaxTemperatureValue}");
             Console.WriteLine($"\tMaximum time to monitor: {timeToMonitor}");
             Console.WriteLine();
             Console.WriteLine("\tPress any key to start monitoring ...");
             Console.ReadKey();
-            //DisplayCurrentLightSensorValue(finchRobot, sensorsToMonitor, timeToMonitor, 5, 10);
 
-            Alarm(finchRobot, rangeType, minMaxThresholdValue, sensorsToMonitor, timeToMonitor);
+            // use Alarm method to monitor light and temperature based on parameters provided by user input 
+
+            Alarm(finchRobot, rangeType, minMaxThresholdValue, sensorsToMonitor, timeToMonitor, minMaxTemperatureValue);
+            DisplayMenuPrompt("Alarm System Menu");
 
         }
-
-        static void Alarm(Finch finchRobot, string rangeType, double minMaxThresholdValue, string sensorsToMonitor, int timeToMonitor)
+        /// <summary>
+        /// ******************************************************
+        ///         ALARM MONITORING METHOD               
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="rangeType"></param>
+        /// <param name="minMaxThresholdValue"></param>
+        /// <param name="sensorsToMonitor"></param>
+        /// <param name="timeToMonitor"></param>
+        static void Alarm(Finch finchRobot, string rangeType, int minMaxThresholdValue, string sensorsToMonitor, int timeToMonitor, double minMaxTemperatureValue)
         {
             int timeElapsed = 0;
             bool threshold = false;
             int currentLightSensorValue = 0;
+            double tempNow = 0;
+            
+            // monitor tempeerature and light
 
             while (timeElapsed < timeToMonitor && !threshold)
             {
+                // get the current temperature and convert it to farenheit
+
+                tempNow = GetTempNow(finchRobot);
+
+                // get the current light sensor value based on user input
 
                 currentLightSensorValue = LeftRightBothSensorValue(finchRobot, sensorsToMonitor);
 
+                // display sensor values, time elapsed and temperature in a fixed location
+
                 DisplayCurrentLightSensorValues(finchRobot, sensorsToMonitor, timeToMonitor, timeElapsed, 5, 10);
+
+                // monitor based on user input
 
                 switch (rangeType)
                 {
                     case "minimum":
-                        if (currentLightSensorValue < minMaxThresholdValue)
+                        if (currentLightSensorValue < minMaxThresholdValue || tempNow < minMaxTemperatureValue)
                         {
-                            
+                            // if threshold is exceeded alarm sounded and loop breaks
+
                             StarWarsNoMotors(finchRobot);
                             threshold = true;
                         }
 
                         break;
                     case "maximum":
-                        if (currentLightSensorValue > minMaxThresholdValue)
+                        if (currentLightSensorValue > minMaxThresholdValue || tempNow > minMaxTemperatureValue)
                         {
-                            
+                            // if threshold is exceeded alarm sounded and loop breaks
+
                             StarWarsNoMotors(finchRobot);
                             threshold = true;
                         }
                         break;
 
                 }
+
+                // pause loop for one second
+
                 finchRobot.wait(1000);
+
+                // increment timeElapsed
+
                 timeElapsed++;
             }
-            Threshold(threshold, rangeType, currentLightSensorValue, minMaxThresholdValue);
-        }
+            
+            // use the method Threshold to determine what is displayed on screen
 
-        static void Threshold(bool threshold, string rangeType, int currentLightSensorValue, double minMaxThresholdValue)
+            Threshold(threshold, rangeType, currentLightSensorValue, minMaxThresholdValue, minMaxTemperatureValue, tempNow);
+        }
+        /// <summary>
+        /// ******************************************************
+        ///         ALARM DISPLAY BASED ON BOOLEAN              
+        /// ******************************************************
+        /// </summary>
+        /// <param name="threshold"></param>
+        /// <param name="rangeType"></param>
+        /// <param name="currentSensorValue"></param>
+        /// <param name="minMaxThresholdValue"></param>
+        static void Threshold(bool threshold, string rangeType, int currentSensorValue, int minMaxThresholdValue, double minMaxTemperatureValue, double tempNow)
         {
+            // if threshold was exceeded 
+
             if (threshold)
             {
                 Console.WriteLine();
-                Console.WriteLine($"\tThe {rangeType} threshold {minMaxThresholdValue} was exceeded by the current sensor value: {currentLightSensorValue}");
+                Console.WriteLine($"\tThe {rangeType} threshold {minMaxThresholdValue} was exceeded by the current sensor value: {currentSensorValue}");
             }
+
+            // if threshold was not exceeded
+
             if (!threshold)
             {
                 Console.WriteLine();
-                Console.WriteLine($"\tThe {rangeType} threshold {minMaxThresholdValue} was not exceeded by the current sensor value: {currentLightSensorValue}");
+                Console.WriteLine($"\tThe {rangeType} light sensor threshold {minMaxThresholdValue} was not exceeded by the current sensor value: {currentSensorValue}");
+                Console.WriteLine();
+                Console.WriteLine($"\tThe {rangeType} temperature {minMaxTemperatureValue} was not exceeded by the current sensor value: {tempNow:n0} ");
             }
 
-            DisplayMenuPrompt("Alarm System Menu");
+
         }
-        // challenge
-        // develop a method to return the current light sensor value using the sensorsToMonitor value.
-        // Develop a method to display the current light level ina  fixed location of the screen
-        // Develop a method to display the elapsed time in a fixed location of the screen
-
-
         #endregion
 
         #region USER PROGRAMMING
@@ -1320,14 +1472,10 @@ namespace Project_FinchControl
         #endregion
 
         #region VALIDATION METHODS
-        //
-        // **************************************************
-        // *   Methods to be used throughout the app        *
-        // **************************************************
-        //
+
         /// <summary>
         /// ******************************************************
-        /// * Validates an integer falls within a set range      *
+        ///         VALIDATES INTEGER FALLS WITHIN A RANGE     
         /// ******************************************************
         /// </summary>
         /// <param name="thresholdValue"></param>
@@ -1344,7 +1492,6 @@ namespace Project_FinchControl
                     Console.WriteLine();
                     Console.Write($"\tPlease enter a threshold value between {min} and {max}: ");
                     thresholdValue = IsValidInt();
-
                 }
                 else
                 {
@@ -1355,7 +1502,7 @@ namespace Project_FinchControl
         }
         /// <summary>
         /// ******************************************************
-        /// * Prompts user for valid integer with error checking *
+        ///         VALIDATES USER INPUT IS AN INTEGER
         /// ******************************************************
         /// </summary>
         /// <returns></returns>
@@ -1377,7 +1524,7 @@ namespace Project_FinchControl
         }
         /// <summary>
         /// ******************************************************
-        /// * Prompts user for valid double with error checking *
+        ///         VALIDATES USER INPUT IS A DOUBLE
         /// ******************************************************
         /// </summary>
         /// <returns></returns>
@@ -1400,19 +1547,7 @@ namespace Project_FinchControl
 
         /// <summary>
         /// ******************************************************
-        /// *           Converts Celcius to Farenheit             *
-        /// ******************************************************
-        /// </summary>
-        /// <returns></returns>
-        public static double CelciusConversion(double celsius)
-        {
-            double fahrenheit = (celsius * 9) / 5 + 32;
-            return fahrenheit;
-        }
-
-        /// <summary>
-        /// ******************************************************
-        /// *       Gives the average to a double Array          *
+        ///         AVERAGE OF A DOUBLE ARRAY
         /// ******************************************************
         /// </summary>
         /// <param name="temperatures"></param>
@@ -1431,7 +1566,8 @@ namespace Project_FinchControl
         }
         /// <summary>
         /// ******************************************************
-        /// *                 Left, Right or Both                *
+        ///         VALIDATE USER STRING INPUT FOR LEFT, RIGHT
+        ///         OR BOTH
         /// ******************************************************
         /// </summary>
         /// <returns></returns>
@@ -1475,7 +1611,8 @@ namespace Project_FinchControl
         }
         /// <summary>
         /// ******************************************************
-        /// *               Minimum or Maximum                   *
+        ///         VALIDATE USER STRING INPUT IS MINIMUM
+        ///         OR MAXIMUM
         /// ******************************************************
         /// </summary>
         /// <returns></returns>
@@ -1513,52 +1650,26 @@ namespace Project_FinchControl
             return minMax;
         }
 
-
-
-        #endregion
-
-        #region MISCELLANEOUS METHODS
-        /// <summary>
-        ///  Method for counting up
-        /// </summary>
-        /// <param name="time"></param>
-        static void timer(int time, int left, int top)
-        {
-            for (int i = 1; i <= time; i++)
-            {
-                Console.SetCursorPosition(left, top);
-                Console.CursorVisible = false;
-                Console.WriteLine(i);
-                Thread.Sleep(1000);
-            }
-        }
-
-        /// <summary>
-        /// count down to 0 method
-        /// </summary>
-        /// <param name="time"></param>
-        static void countdown(int time, int left, int top)
-        {
-            for (int i = time; i >= 0; --i)
-            {
-                Console.CursorVisible = false;
-                if (i > 10)
-                {
-                    Console.SetCursorPosition(left, top);
-                    Console.WriteLine(i);
-                    Thread.Sleep(1000);
-                }
-                else
-                {
-                    Console.SetCursorPosition(left, top);
-                    Console.WriteLine(i + " ");
-                    Thread.Sleep(1000);
-                }
-            }
-        }
         #endregion
 
         #region SENSOR METHODS
+        /// <summary>
+        /// ******************************************************
+        ///         CONVERTS CELCIUS TO FARENHEIT
+        /// ******************************************************
+        /// </summary>
+        /// <returns></returns>
+        public static double CelciusConversion(double celsius)
+        {
+            double fahrenheit = (celsius * 9) / 5 + 32;
+            return fahrenheit;
+        }
+        /// <summary>
+        /// ******************************************************
+        ///         DISPLAY LEFT AND RIGHT SENSOR VALUES                              
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
         static void DisplayLeftAndRightSensorValue(Finch finchRobot)
         {
             int leftLight = finchRobot.getLeftLightSensor();
@@ -1568,6 +1679,144 @@ namespace Project_FinchControl
             Console.WriteLine($"\tCurrent ambient right light sensor level :  {rightLight}");
             Console.WriteLine();
         }
+
+        /// <summary>
+        /// ******************************************************
+        ///         DISPLAY LIGHT SENSOR VALUES IN FIXED LOCATION     
+        ///         DISPLAY TEMPERATURE IN FIXED LOCATION             
+        ///         DISPLAY TIMER IN FIXED LOCATION                   
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="sensorsToMonitor"></param>
+        /// <param name="timeToMonitor"></param>
+        /// <param name="timeElapsed"></param>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        static void DisplayCurrentLightSensorValues(Finch finchRobot, string sensorsToMonitor, int timeToMonitor, int timeElapsed, int left, int top)
+        {
+            int[][] lights = new int[timeToMonitor][];
+            double temp = GetTempNow(finchRobot);
+            if (sensorsToMonitor == "both")
+            {  
+                Console.SetCursorPosition(left, top);
+                Console.WriteLine();
+                Console.WriteLine($"\tTime Elapsed: {timeElapsed}");
+                Console.WriteLine();                
+                Console.WriteLine(string.Format($"\tTemperature: {temp:n0}"));
+                Console.WriteLine();
+                lights[0] = finchRobot.getLightSensors();
+                Console.WriteLine(string.Format($"\tL: {lights[0][0]} R: {lights[0][1]}"));
+            }
+            else if (sensorsToMonitor == "left")
+            {                
+                Console.SetCursorPosition(left, top);
+                Console.WriteLine();
+                Console.WriteLine($"\tTime Elapsed: {timeElapsed}");
+                Console.WriteLine();
+                Console.WriteLine(string.Format($"\tTemperature: {temp:n0}"));
+                Console.WriteLine();
+                lights[0] = finchRobot.getLightSensors();
+                lights[0] = finchRobot.getLightSensors();
+                Console.WriteLine(string.Format($"\tL: {lights[0][0]}"));                
+            }
+            else
+            {                
+                Console.SetCursorPosition(left, top);
+                Console.WriteLine();
+                Console.WriteLine($"\tTime Elapsed: {timeElapsed}");
+                Console.WriteLine();
+                Console.WriteLine(string.Format($"\tTemperature: {temp:n0}"));
+                Console.WriteLine();
+                lights[0] = finchRobot.getLightSensors();
+                Console.WriteLine(string.Format($"\tR: {lights[0][1]}"));    
+            }
+        }
+        static int GetCurrentLeftSensorValue(Finch finchRobot)
+        {
+            int leftsensor = finchRobot.getLeftLightSensor();
+            return leftsensor;
+        }
+        /// <summary>
+        /// ******************************************************
+        ///         GET RIGHT LIGHT SENSOR VALUE                         
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <returns></returns>
+        static int GetCurrentRightSensorValue(Finch finchRobot)
+        {
+            int rightsensor = finchRobot.getRightLightSensor();
+            return rightsensor;
+        }
+
+        /// <summary>
+        /// ******************************************************
+        ///         GET LEFT LIGHT SENSOR VALUE                                         
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="sensorsToMonitor"></param>
+        /// <returns></returns>
+        static int LeftRightBothSensorValue(Finch finchRobot, string sensorsToMonitor)
+        {
+            int currentLightsensorValue = 0;
+            switch (sensorsToMonitor)
+            {
+                case "left":
+                    currentLightsensorValue = GetCurrentLeftSensorValue(finchRobot);
+                    break;
+                case "right":
+                    currentLightsensorValue = GetCurrentRightSensorValue(finchRobot);
+                    break;
+                case "both":
+                    currentLightsensorValue = ((GetCurrentLeftSensorValue(finchRobot) + GetCurrentRightSensorValue(finchRobot)) / 2);
+                    break;
+            }
+            return currentLightsensorValue;
+        }
+        /// <summary>
+        /// ******************************************************
+        ///         GET CURRENT TEMPERATURE                               
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <returns></returns>
+        static double GetTempNow(Finch finchRobot)
+        {
+            double temp = finchRobot.getTemperature();
+            temp = CelciusConversion(temp);
+            return temp;
+        }
+
+        #endregion
+        
+        #region UNUSED METHODS
+        /// <summary>
+        /// ******************************************************
+        ///         GET LEFT AND RIGHT SENSOR VALUE                              
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <returns></returns>
+        static int[][] GetLeftAndRightSensorValue(Finch finchRobot)
+        {
+            int[][] lights = new int[0][];
+            lights[0] = finchRobot.getLightSensors();
+            return lights;
+        }
+
+        /// <summary>
+        /// ******************************************************
+        ///         DISPLAY CURRENT LIGHT SENSOR VALUES
+        ///         IN A FIXED LOCATION
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="sensorsToMonitor"></param>
+        /// <param name="timeToMonitor"></param>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
         static void DisplayCurrentLightSensorValue(Finch finchRobot, string sensorsToMonitor, int timeToMonitor, int left, int top)
         {
             int[][] lights = new int[timeToMonitor][];
@@ -1610,84 +1859,49 @@ namespace Project_FinchControl
                 }
             }
         }
-
-        static void DisplayCurrentLightSensorValues(Finch finchRobot, string sensorsToMonitor, int timeToMonitor, int timeElapsed, int left, int top)
+        /// <summary>
+        /// ******************************************************
+        ///         TIMER FOR COUNTING UP                                      
+        /// ******************************************************
+        /// </summary>
+        /// <param name="time"></param>
+        static void timer(int time, int left, int top)
         {
-            int[][] lights = new int[timeToMonitor][];
-
-            if (sensorsToMonitor == "both")
-            {  
-                    Console.SetCursorPosition(left, top);
-                    Console.WriteLine($"\tTime Elapsed: {timeElapsed}");
-                    Console.WriteLine();
-                    lights[0] = finchRobot.getLightSensors();
-                    Console.WriteLine(string.Format($"\tL: {lights[0][0]} R: {lights[0][1]}"));
-            }
-            else if (sensorsToMonitor == "left")
-            {                
-                    Console.SetCursorPosition(left, top);
-                    Console.WriteLine($"\tTime Elapsed: {timeElapsed}");
-                    Console.WriteLine();
-                    lights[0] = finchRobot.getLightSensors();
-                    Console.WriteLine(string.Format($"\tL: {lights[0][0]}"));                
-            }
-            else
-            {                
-                    Console.SetCursorPosition(left, top);
-                    Console.WriteLine($"\tTime Elapsed: {timeElapsed}");
-                    Console.WriteLine();
-                    lights[0] = finchRobot.getLightSensors();
-                    Console.WriteLine(string.Format($"\tR: {lights[0][1]}"));    
-            }
-        }
-        static int GetCurrentLeftSensorValue(Finch finchRobot)
-        {
-            int leftsensor = finchRobot.getLeftLightSensor();
-            return leftsensor;
-        }
-
-        static int GetCurrentRightSensorValue(Finch finchRobot)
-        {
-            int rightsensor = finchRobot.getRightLightSensor();
-            return rightsensor;
-        }
-        static int[][] GetLeftAndRightSensorValue(Finch finchRobot)
-        {
-            int[][] lights = new int[0][];
-            lights[0] = finchRobot.getLightSensors();
-            return lights;
-        }
-        static int LeftRightBothSensorValue(Finch finchRobot, string sensorsToMonitor)
-        {
-            int currentLightsensorValue = 0;
-            switch (sensorsToMonitor)
+            for (int i = 1; i <= time; i++)
             {
-                case "left":
-                    currentLightsensorValue = GetCurrentLeftSensorValue(finchRobot);
-                    break;
-                case "right":
-                    currentLightsensorValue = GetCurrentRightSensorValue(finchRobot);
-                    break;
-                case "both":
-                    currentLightsensorValue = ((GetCurrentLeftSensorValue(finchRobot) + GetCurrentRightSensorValue(finchRobot)) / 2);
-                    break;
+                Console.SetCursorPosition(left, top);
+                Console.CursorVisible = false;
+                Console.WriteLine(i);
+                Thread.Sleep(1000);
             }
-            return currentLightsensorValue;
         }
 
-        static double GetTempNow(Finch finchRobot)
+        /// <summary>
+        /// ******************************************************
+        ///         COUNTDOWN METHOD                                      
+        /// ******************************************************
+        /// </summary>
+        /// <param name="time"></param>
+        static void countdown(int time, int left, int top)
         {
-            double temp = finchRobot.getTemperature();
-            return temp;
+            for (int i = time; i >= 0; --i)
+            {
+                Console.CursorVisible = false;
+                if (i > 10)
+                {
+                    Console.SetCursorPosition(left, top);
+                    Console.WriteLine(i);
+                    Thread.Sleep(1000);
+                }
+                else
+                {
+                    Console.SetCursorPosition(left, top);
+                    Console.WriteLine(i + " ");
+                    Thread.Sleep(1000);
+                }
+            }
         }
-        static void DisplayTempNow(Finch finchRobot, int timeElapsed, int left, int top)
-        {
-            Console.SetCursorPosition(left, top);
-            Console.WriteLine($"\tTime Elapsed: {timeElapsed}");
-            Console.WriteLine();
-            GetTempNow(finchRobot);
-            Console.WriteLine(string.Format($"\tL: {temp}"));
-        }
+
         #endregion
     }
 }
