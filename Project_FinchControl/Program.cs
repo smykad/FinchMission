@@ -1298,13 +1298,48 @@ namespace Project_FinchControl
             if (threshold)
             {
                 Skull(finchRobot);
-                Console.WriteLine(@"
-                    
-                    ");
                 Console.WriteLine();
-                Console.WriteLine($"\tThe {rangeType} threshold {minMaxThresholdValue} was exceeded by the current sensor value: {currentSensorValue}");
-            }
 
+                // if range type was maximum
+
+                if (rangeType == "maximum")
+                    if(currentSensorValue > minMaxThresholdValue && tempNow > minMaxTemperatureValue)
+                    {
+                        Console.WriteLine($"\tThe {rangeType} threshold {minMaxThresholdValue} was exceeded by the current sensor value: {currentSensorValue}");
+                        Console.WriteLine();
+                        Console.WriteLine($"\tThe {rangeType} temperature {minMaxTemperatureValue} was exceeded by the current sensor value: {tempNow:n0} ");
+                    }
+                    else if (currentSensorValue > minMaxThresholdValue)
+                    {
+                        
+                        Console.WriteLine($"\tThe {rangeType} threshold {minMaxThresholdValue} was exceeded by the current sensor value: {currentSensorValue}");
+                        
+                    }
+                    else
+                    {
+                        Console.WriteLine($"\tThe {rangeType} temperature {minMaxTemperatureValue} was not exceeded by the current sensor value: {tempNow:n0} ");
+                    }
+
+                // i frange type was minimum
+
+                if (rangeType =="minimum")
+                {
+                    if (currentSensorValue < minMaxThresholdValue && tempNow < minMaxTemperatureValue)
+                    {
+                        Console.WriteLine($"\tThe {rangeType} threshold {minMaxThresholdValue} was exceeded by the current sensor value: {currentSensorValue}");
+                        Console.WriteLine();
+                        Console.WriteLine($"\tThe {rangeType} temperature {minMaxTemperatureValue} was exceeded by the current sensor value: {tempNow:n0} ");
+                    }
+                    else if (currentSensorValue < minMaxThresholdValue)
+                    {
+                        Console.WriteLine($"\tThe {rangeType} threshold {minMaxThresholdValue} was exceeded by the current sensor value: {currentSensorValue}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"\tThe {rangeType} temperature {minMaxTemperatureValue} was exceeded by the current sensor value: {tempNow:n0} ");
+                    }
+                }
+            }
             // if threshold was not exceeded
 
             if (!threshold)
