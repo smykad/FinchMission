@@ -1252,9 +1252,8 @@ namespace Project_FinchControl
                     case "minimum":
                         if (currentLightSensorValue < minMaxThresholdValue || tempNow < minMaxTemperatureValue)
                         {
-                            // if threshold is exceeded alarm sounded and loop breaks
+                            // if threshold is exceeded loop breaks
 
-                            StarWarsNoMotors(finchRobot);
                             threshold = true;
                         }
 
@@ -1262,9 +1261,8 @@ namespace Project_FinchControl
                     case "maximum":
                         if (currentLightSensorValue > minMaxThresholdValue || tempNow > minMaxTemperatureValue)
                         {
-                            // if threshold is exceeded alarm sounded and loop breaks
+                            // if threshold is exceeded loop breaks
 
-                            StarWarsNoMotors(finchRobot);
                             threshold = true;
                         }
                         break;
@@ -1282,7 +1280,7 @@ namespace Project_FinchControl
             
             // use the method Threshold to determine what is displayed on screen
 
-            Threshold(threshold, rangeType, currentLightSensorValue, minMaxThresholdValue, minMaxTemperatureValue, tempNow);
+            Threshold(finchRobot, threshold, rangeType, currentLightSensorValue, minMaxThresholdValue, minMaxTemperatureValue, tempNow);
         }
         /// <summary>
         /// ******************************************************
@@ -1293,12 +1291,16 @@ namespace Project_FinchControl
         /// <param name="rangeType"></param>
         /// <param name="currentSensorValue"></param>
         /// <param name="minMaxThresholdValue"></param>
-        static void Threshold(bool threshold, string rangeType, int currentSensorValue, int minMaxThresholdValue, double minMaxTemperatureValue, double tempNow)
+        static void Threshold(Finch finchRobot, bool threshold, string rangeType, int currentSensorValue, int minMaxThresholdValue, double minMaxTemperatureValue, double tempNow)
         {
             // if threshold was exceeded 
 
             if (threshold)
             {
+                Skull(finchRobot);
+                Console.WriteLine(@"
+                    
+                    ");
                 Console.WriteLine();
                 Console.WriteLine($"\tThe {rangeType} threshold {minMaxThresholdValue} was exceeded by the current sensor value: {currentSensorValue}");
             }
@@ -1307,6 +1309,7 @@ namespace Project_FinchControl
 
             if (!threshold)
             {
+                Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine($"\tThe {rangeType} light sensor threshold {minMaxThresholdValue} was not exceeded by the current sensor value: {currentSensorValue}");
                 Console.WriteLine();
@@ -1314,6 +1317,47 @@ namespace Project_FinchControl
             }
 
 
+        }
+        /// <summary>
+        /// ******************************************************
+        ///         DANGER SKULL ASCII ART              
+        /// ******************************************************
+        /// </summary>
+        static void Skull(Finch finchRobot)
+        {
+            Console.Clear();
+            Console.Write(@"
+              _____          _   _  _____ ______ _____  
+             |  __ \   /\   | \ | |/ ____|  ____|  __ \ 
+             | |  | | /  \  |  \| | |  __| |__  | |__) |
+             | |  | |/ /\ \ | . ` | | |_ |  __| |  _  / 
+             | |__| / ____ \| |\  | |__| | |____| | \ \ 
+             |_____/_/    \_\_| \_|\_____|______|_|  \_\
+                                            
+         @@@@@                                        @@@@@
+        @@@@@@@                                      @@@@@@@
+        @@@@@@@           @@@@@@@@@@@@@@@            @@@@@@@
+         @@@@@@@@       @@@@@@@@@@@@@@@@@@@        @@@@@@@@
+             @@@@@     @@@@@@@@@@@@@@@@@@@@@     @@@@@
+               @@@@@  @@@@@@@@@@@@@@@@@@@@@@@  @@@@@
+                 @@  @@@@@@@@@@@@@@@@@@@@@@@@@  @@
+                    @@@@@@@    @@@@@@    @@@@@@
+                    @@@@@@      @@@@      @@@@@
+                    @@@@@@      @@@@      @@@@@
+                     @@@@@@    @@@@@@    @@@@@
+                      @@@@@@@@@@@  @@@@@@@@@@
+                       @@@@@@@@@@  @@@@@@@@@
+                   @@   @@@@@@@@@@@@@@@@@   @@
+                   @@@@  @@@@ @ @ @ @ @@@@  @@@@
+                  @@@@@   @@@ @ @ @ @ @@@   @@@@@
+                @@@@@      @@@@@@@@@@@@@      @@@@@
+              @@@@          @@@@@@@@@@@          @@@@
+           @@@@@              @@@@@@@              @@@@@
+          @@@@@@@                                 @@@@@@@
+           @@@@@                                   @@@@@
+                            ");
+            Console.WriteLine();
+            StarWarsNoMotors(finchRobot);
         }
         #endregion
 
@@ -1706,7 +1750,9 @@ namespace Project_FinchControl
                 Console.WriteLine(string.Format($"\tTemperature: {temp:n0}"));
                 Console.WriteLine();
                 lights[0] = finchRobot.getLightSensors();
-                Console.WriteLine(string.Format($"\tL: {lights[0][0]} R: {lights[0][1]}"));
+                Console.WriteLine(string.Format($"\tLeft  Sensor: {lights[0][0]}"));
+                Console.WriteLine();
+                Console.WriteLine(string.Format($"\tRight Sensor: {lights[0][1]}"));
             }
             else if (sensorsToMonitor == "left")
             {                
@@ -1718,7 +1764,7 @@ namespace Project_FinchControl
                 Console.WriteLine();
                 lights[0] = finchRobot.getLightSensors();
                 lights[0] = finchRobot.getLightSensors();
-                Console.WriteLine(string.Format($"\tL: {lights[0][0]}"));                
+                Console.WriteLine(string.Format($"\tLeft Sensor: {lights[0][0]}"));                
             }
             else
             {                
@@ -1729,7 +1775,7 @@ namespace Project_FinchControl
                 Console.WriteLine(string.Format($"\tTemperature: {temp:n0}"));
                 Console.WriteLine();
                 lights[0] = finchRobot.getLightSensors();
-                Console.WriteLine(string.Format($"\tR: {lights[0][1]}"));    
+                Console.WriteLine(string.Format($"\tRight Sensor: {lights[0][1]}"));    
             }
         }
         static int GetCurrentLeftSensorValue(Finch finchRobot)
