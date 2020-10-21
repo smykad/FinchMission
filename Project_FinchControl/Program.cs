@@ -15,13 +15,28 @@ namespace Project_FinchControl
     // Description: Menus created, functions created
     // Author: Smyka, Doug
     // Dated Created: 10/4/2020
-    // Last Modified: 10/18/2020
+    // Last Modified: 10/21/2020
     //
     // **************************************************
 
     class Program
     {
         #region MAIN
+        public enum Command
+        {
+            NONE,
+            MOVEFORWARD,
+            MOVEBACKWARD,
+            STOPMOTORS,
+            WAIT,
+            TURNRIGHT,
+            TURNLEFT,
+            LEDON,
+            LEDOFF,
+            GETTEMPERATURE,
+            DONE
+        }
+
 
         /// <summary>
         /// first method run when the app starts up
@@ -1400,16 +1415,152 @@ namespace Project_FinchControl
 
         /// <summary>
         /// *****************************************************************
-        /// *                   User Programming                           *
+        /// *                     USER PROGRAMMING                          *
         /// *****************************************************************
         /// </summary>
         /// <param name="finchRobot">finch robot object</param>
 
         static void DisplayUserProgrammingMenuScreen(Finch finchRobot)
         {
+            //
+            // display header
+            //
+
             DisplayScreenHeader("User Programming");
-            Console.WriteLine("This module is under development");
-            DisplayContinuePrompt();
+
+
+            //
+            // initialize variables
+            //
+
+            //  I. Declare a tuple (int motorSpeed, int ledBrightness, double waitSeconds)
+            // II. Declare a list of the enum Command: List<Command> commands = new List<Command>()
+
+            string menuChoice;
+            bool quitMenu = false;
+
+            do
+            {
+                DisplayScreenHeader("User Programming Menu");
+
+                //
+                // get user menu choice
+                //
+                Console.WriteLine("\tA: Set Command Parameters");
+                Console.WriteLine("\tB: Add Commands");
+                Console.WriteLine("\tC: View Commands");
+                Console.WriteLine("\tD: Execute Commands");
+                Console.WriteLine("\tQ: Main Menu");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.Write("\tEnter Choice: ");
+                menuChoice = Console.ReadLine().ToLower();
+
+                //
+                // process user menu choice
+                //
+                switch (menuChoice)
+                {
+                    case "a":
+                        
+                        break;
+
+                    case "b":
+                        
+                        break;
+
+                    case "c":
+                        
+                        break;
+
+                    case "d":
+                        
+                        break;
+
+                    case "q":
+                        quitMenu = true;
+                        break;
+
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("\tThat is not a valid input");
+                        DisplayContinuePrompt();
+                        break;
+                }
+
+            } while (!quitMenu);
+        }
+        /// <summary>
+        /// *****************************************************************
+        /// *      USER PROGRAMMING  >  SET COMMAND PARAMETERS              *
+        /// *****************************************************************
+        /// </summary>
+        /// 
+        // parameters will be:  int motorSpeed, int ledBrightness, int waitSeconds
+        static void UserProgrammingDisplayGetCommandParameters()
+        {
+            // Declare a tuple(int motorSpeed, int ledBrightness, double waitSeconds)
+
+            DisplayScreenHeader("Set Command Parameters");
+
+            // Prompt, get, and validate motor speed from the user.
+            // Prompt, get, and validate the LED brightness from the user.
+            // Prompt, get, and validate the wait time from the user.
+            // Echo the values provided by the user
+            // Return all of the values as a tuple
+
+            DisplayMenuPrompt("User Programming Menu");
+            
+        }
+        /// <summary>
+        /// *****************************************************************
+        /// *             USER PROGRAMMING  >  ADD COMMANDS                 *
+        /// *****************************************************************
+        /// </summary>
+        /// <param name="commands"></param>
+        static void UserProgrammingDisplayGetFinchCommands(List<Command> commands)
+        {
+            DisplayScreenHeader("Add Commands");
+
+            // Display instructions for user
+            // Add a while or do-while loop
+                // Prompt the user for each new command
+                // Parse, validate, and adds the new command to the command list
+                // Terminate when the user enters the "done" command
+            // Echo the user's commands (Hint: use a foreach loop)
+
+            DisplayMenuPrompt("User Programming Menu");
+
+        }
+        /// <summary>
+        /// *****************************************************************
+        /// *            USER PROGRAMMING  >  VIEW COMMANDS                 *
+        /// ***************************************************************** 
+        /// </summary>
+        /// <param name="commands"></param>
+        static void DisplayFinchCommands(List<Command> commands)
+        {
+            DisplayScreenHeader("View Commands");
+
+            // Display all commands stored in the command list
+
+            DisplayMenuPrompt("User Programming Menu");
+        }
+        /// <summary>
+        /// *****************************************************************
+        /// *            USER PROGRAMMING  >  EXECUTE COMMANDS              *
+        /// *****************************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="commands"></param>
+        static void DisplayExecuteFinchCommands(Finch finchRobot, List<Command> commands)
+        {
+            DisplayScreenHeader("Execute Commands");
+            // Inform and prompt the user
+            // Execute all of the commands
+            // Display each command name as it is executed
+
+            DisplayMenuPrompt("User Programming Menu");
         }
 
         #endregion
