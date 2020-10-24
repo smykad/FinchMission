@@ -36,7 +36,18 @@ namespace Project_FinchControl
             GETTEMPERATURE,
             DONE
         }
-
+        public enum Note
+        {
+            NONE,
+            A,
+            B,
+            C,
+            D,
+            E,
+            F,
+            G,
+            DONE
+        }
 
         /// <summary>
         /// first method run when the app starts up
@@ -1453,6 +1464,7 @@ namespace Project_FinchControl
                 Console.WriteLine("\tB: Add Commands");
                 Console.WriteLine("\tC: View Commands");
                 Console.WriteLine("\tD: Execute Commands");
+                Console.WriteLine("\tE: Song Maker");
                 Console.WriteLine("\tQ: Main Menu");
                 Console.WriteLine();
                 Console.WriteLine();
@@ -1478,6 +1490,10 @@ namespace Project_FinchControl
 
                     case "d":
                         UserProgrammingDisplayExecuteFinchCommands(finchRobot, commands, commandParameters);
+                        break;
+
+                    case "e":
+                        DisplaySongMenu(finchRobot);
                         break;
 
                     case "q":
@@ -2288,7 +2304,129 @@ namespace Project_FinchControl
                 }
             }
         }
+        #endregion
+        
+        #region SONGMAKER
+        static void DisplaySongMenu(Finch finchRobot)
+        {
+            List<Note> notes = new List<Note>();
+            string menuChoice;
+            bool quitMenu = false;
 
+            do
+            {
+                //
+                // display header
+                //
+                DisplayScreenHeader("Song Maker Menu");
+
+                //
+                // get user menu choice
+                //
+                Console.WriteLine("\tA: Set Notes");
+                Console.WriteLine("\tB: Play Song");
+                Console.WriteLine("\tQ: Main Menu");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.Write("\tEnter Choice: ");
+                menuChoice = Console.ReadLine().ToLower();
+
+                //
+                // process user menu choice
+                //
+                switch (menuChoice)
+                {
+                    case "a":
+                        GetSong(notes);
+                        break;
+
+                    case "b":
+                        PlaySong(finchRobot, notes);
+                        break;
+
+                    case "q":
+                        quitMenu = true;
+                        break;
+
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("\tThat is not a valid input");
+                        DisplayContinuePrompt();
+                        break;
+                }
+
+            } while (!quitMenu);
+
+        }
+        static void GetSong(List<Note> notes)
+        {
+            Note note = Note.NONE;
+            DisplayScreenHeader("Set Notes for Song");
+
+            while (note != Note.DONE)
+            {
+                Console.Write("\tEnter Note: ");
+
+                if (Enum.TryParse(Console.ReadLine().ToUpper(), out note))
+                {
+                    notes.Add(note);
+                }
+                else
+                {
+                    Console.WriteLine("\tPlease enter a note from the list above");
+                }
+            }
+
+            PrintCommands(notes);
+            
+
+            DisplayMenuPrompt("Song Maker Menu");
+        }
+        static void PlaySong(Finch finchRobot, List<Note> notes)
+        {
+            DisplayScreenHeader("Your song");
+            Console.WriteLine("\tThe Finch will now sing your song!");
+            DisplayContinuePrompt();
+            foreach (Note note in notes)
+            {
+                switch (note)
+                {
+                    case Note.NONE:
+                        break;
+                    case Note.A:
+                        Beep(finchRobot, 220, 1000);
+                        break;
+                    case Note.B:
+                        Beep(finchRobot, 247, 1000);
+                        break;
+                    case Note.C:
+                        Beep(finchRobot, 131, 1000);
+                        break;
+                    case Note.D:
+                        Beep(finchRobot, 147, 1000);
+                        break;
+                    case Note.E:
+                        Beep(finchRobot, 165, 1000);
+                        break;
+                    case Note.F:
+                        Beep(finchRobot, 175, 1000);
+                        break;
+                    case Note.G:
+                        Beep(finchRobot, 196, 1000);
+                        break;
+                    case Note.DONE:
+                        break;
+                }
+
+                
+            }
+
+            DisplayMenuPrompt("Song Maker Menu");
+        }
+        static void PrintCommands(List<Note> notes)
+        {
+            foreach (Note note in notes) Console.Write($" {note} | ");   
+        }
         #endregion
     }
 }
