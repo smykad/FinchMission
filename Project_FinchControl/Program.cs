@@ -15,7 +15,7 @@ namespace Project_FinchControl
     // Description: Menus created, functions created
     // Author: Smyka, Doug
     // Dated Created: 10/4/2020
-    // Last Modified: 10/21/2020
+    // Last Modified: 10/24/2020
     //
     // **************************************************
 
@@ -1124,7 +1124,7 @@ namespace Project_FinchControl
             // validate user input is within the proper range using
             // method isValidThresholdAndRange
 
-            thresholdValue = isValidThresholdAndRange(thresholdValue, 255, 0);
+            thresholdValue = isValidThresholdAndRange(thresholdValue, 0, 255);
             Console.WriteLine();
 
             // echo back user input
@@ -1422,25 +1422,28 @@ namespace Project_FinchControl
 
         static void DisplayUserProgrammingMenuScreen(Finch finchRobot)
         {
-            //
-            // display header
-            //
 
-            DisplayScreenHeader("User Programming");
-
-
-            //
-            // initialize variables
-            //
-
-            //  I. Declare a tuple (int motorSpeed, int ledBrightness, double waitSeconds)
-            // II. Declare a list of the enum Command: List<Command> commands = new List<Command>()
 
             string menuChoice;
             bool quitMenu = false;
 
+            //
+            //  Tuple to store command parameters
+            //
+
+            (int motorSpeed, int ledBrightness, double waitSeconds) commandParameters;
+            commandParameters.motorSpeed = 0;
+            commandParameters.ledBrightness = 0;
+            commandParameters.waitSeconds = 0;
+
+            List<Command> commands = new List<Command>();
+
+
             do
             {
+                //
+                // display header
+                //
                 DisplayScreenHeader("User Programming Menu");
 
                 //
@@ -1462,19 +1465,19 @@ namespace Project_FinchControl
                 switch (menuChoice)
                 {
                     case "a":
-                        
+                        commandParameters = UserProgrammingDisplayGetCommandParameters();
                         break;
 
                     case "b":
-                        
+                        UserProgrammingDisplayGetFinchCommands(commands);
                         break;
 
                     case "c":
-                        
+                        UserProgrammingDisplayFinchCommands(commands);
                         break;
 
                     case "d":
-                        
+                        //UserProgrammingDisplayExecuteFinchCommands(finchRobot, commands, commandParameters);
                         break;
 
                     case "q":
@@ -1496,21 +1499,33 @@ namespace Project_FinchControl
         /// *****************************************************************
         /// </summary>
         /// 
-        // parameters will be:  int motorSpeed, int ledBrightness, int waitSeconds
-        static void UserProgrammingDisplayGetCommandParameters()
+        // parameters will be:  
+        static (int motorSpeed, int ledBrightness, double waitSeconds) UserProgrammingDisplayGetCommandParameters()
         {
-            // Declare a tuple(int motorSpeed, int ledBrightness, double waitSeconds)
+            (int motorSpeed, int ledBrightness, double waitSeconds) commandParameters;
+            commandParameters.motorSpeed = 0;
+            commandParameters.ledBrightness = 0;
+            commandParameters.waitSeconds = 0;
 
             DisplayScreenHeader("Set Command Parameters");
 
-            // Prompt, get, and validate motor speed from the user.
-            // Prompt, get, and validate the LED brightness from the user.
-            // Prompt, get, and validate the wait time from the user.
+            // Prompt user
+
+            commandParameters.motorSpeed = ValidIntegerAndRange("\tEnter Motor Speed [1-255]: ", 1, 255);
+            commandParameters.ledBrightness = ValidIntegerAndRange("\tEnter LED Brightness [1-255]: ", 1, 255);
+            commandParameters.waitSeconds = ValidDoubleAndRange("\tEnter wait in seconds (1-10): ", 0, 10);
+
+            Console.WriteLine();
+            Console.WriteLine($"Motor Speed: {commandParameters.motorSpeed}");
+            Console.WriteLine($"LED Brightness: {commandParameters.ledBrightness}");
+            Console.WriteLine($"Wait command duration: {commandParameters.waitSeconds}");
+
             // Echo the values provided by the user
             // Return all of the values as a tuple
 
             DisplayMenuPrompt("User Programming Menu");
-            
+
+            return commandParameters;
         }
         /// <summary>
         /// *****************************************************************
@@ -1520,9 +1535,26 @@ namespace Project_FinchControl
         /// <param name="commands"></param>
         static void UserProgrammingDisplayGetFinchCommands(List<Command> commands)
         {
-            DisplayScreenHeader("Add Commands");
+            Command command = Command.NONE;
+
+            DisplayScreenHeader("Finch Robot Commands");
+
 
             // Display instructions for user
+
+            while (command != Command.DONE)
+            {
+                Console.Write("\tEnter Command: ");
+
+                if (Enum.TryParse(Console.ReadLine().ToUpper(), out command))
+                {
+                    commands.Add(command);
+                }
+                else
+                {
+                    Console.WriteLine("\tPlease enter a command from the list above");
+                }
+            }
             // Add a while or do-while loop
                 // Prompt the user for each new command
                 // Parse, validate, and adds the new command to the command list
@@ -1538,7 +1570,7 @@ namespace Project_FinchControl
         /// ***************************************************************** 
         /// </summary>
         /// <param name="commands"></param>
-        static void DisplayFinchCommands(List<Command> commands)
+        static void UserProgrammingDisplayFinchCommands(List<Command> commands)
         {
             DisplayScreenHeader("View Commands");
 
@@ -1553,7 +1585,7 @@ namespace Project_FinchControl
         /// </summary>
         /// <param name="finchRobot"></param>
         /// <param name="commands"></param>
-        static void DisplayExecuteFinchCommands(Finch finchRobot, List<Command> commands)
+        static void UserProgrammingDisplayExecuteFinchCommands(Finch finchRobot, List<Command> commands)
         {
             DisplayScreenHeader("Execute Commands");
             // Inform and prompt the user
@@ -1702,7 +1734,69 @@ namespace Project_FinchControl
         #endregion
 
         #region VALIDATION METHODS
+        /// <summary>
+        /// ******************************************************
+        ///         PROMPTS FOR INTEGER WITHIN A RANGE
+        ///         VALIDATES USER INPUT
+        /// ******************************************************
+        /// </summary>
+        /// <param name="prompt"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        static int ValidIntegerAndRange(string prompt, int min, int max)
+        {
+            Console.Write(prompt);
+            int thresholdValue = IsValidInt();
+            thresholdValue = isValidThresholdAndRange(thresholdValue, min, max);
+            return thresholdValue;
+        }
+        /// <summary>
+        /// ******************************************************
+        ///         PROMPTS FOR DOUBLE WITHIN A RANGE
+        ///         VALIDATES USER INPUT
+        /// ******************************************************
+        /// </summary>
+        /// <param name="prompt"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        static double ValidDoubleAndRange(string prompt, int min, int max)
+        {
 
+            Console.Write(prompt);
+            double thresholdValue = IsValidDouble();
+            thresholdValue = isValidThresholdAndRange(thresholdValue, min, max);
+            return thresholdValue;
+        }
+        /// <summary>
+        /// ******************************************************
+        ///         VALIDATES DOUBLE FALLS WITHIN A RANGE     
+        /// ******************************************************
+        /// 
+        /// </summary>
+        /// <param name="thresholdValue"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        static double isValidThresholdAndRange(double thresholdValue, int min, int max)
+        {
+            bool isValidThreshold = false;
+            while (!isValidThreshold)
+            {
+                if (thresholdValue > max || thresholdValue < min)
+                {
+                    Console.WriteLine();
+                    Console.Write($"\tPlease enter a threshold value between {min} and {max}: ");
+                    thresholdValue = IsValidDouble();
+                }
+                else
+                {
+                    isValidThreshold = true;
+                }
+            }
+            return thresholdValue;
+        }
         /// <summary>
         /// ******************************************************
         ///         VALIDATES INTEGER FALLS WITHIN A RANGE     
@@ -1712,7 +1806,8 @@ namespace Project_FinchControl
         /// <param name="max"></param>
         /// <param name="min"></param>
         /// <returns></returns>
-        static int isValidThresholdAndRange(int thresholdValue, int max, int min)
+
+        static int isValidThresholdAndRange(int thresholdValue, int min, int max)
         {
             bool isValidThreshold = false;
             while (!isValidThreshold)
