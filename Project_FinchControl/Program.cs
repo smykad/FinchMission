@@ -2387,6 +2387,9 @@ namespace Project_FinchControl
             DisplayScreenHeader("Your song");
             Console.WriteLine("\tThe Finch will now sing your song!");
             DisplayContinuePrompt();
+            Console.Clear();
+            Console.SetCursorPosition(0, 10);
+
             foreach (Note note in notes)
             {
                 switch (note)
@@ -2394,25 +2397,39 @@ namespace Project_FinchControl
                     case Note.NONE:
                         break;
                     case Note.A:
-                        Beep(finchRobot, 220, 1000);
+                        Beep(finchRobot, 220, 250);
+                        Console.SetCursorPosition(17, 10);
+                        Console.Write(" A ");
                         break;
                     case Note.B:
-                        Beep(finchRobot, 247, 1000);
+                        Beep(finchRobot, 247, 250);
+                        Console.SetCursorPosition(17, 10);
+                        Console.Write(" B ");
                         break;
                     case Note.C:
-                        Beep(finchRobot, 131, 1000);
+                        Beep(finchRobot, 131, 250);
+                        Console.SetCursorPosition(17, 10);
+                        Console.Write(" C ");
                         break;
                     case Note.D:
-                        Beep(finchRobot, 147, 1000);
+                        Beep(finchRobot, 147, 250);
+                        Console.SetCursorPosition(17, 10);
+                        Console.Write(" D ");
                         break;
                     case Note.E:
-                        Beep(finchRobot, 165, 1000);
+                        Beep(finchRobot, 165, 250);
+                        Console.Write(" E ");
+                        Console.SetCursorPosition(17, 10);
                         break;
                     case Note.F:
-                        Beep(finchRobot, 175, 1000);
+                        Beep(finchRobot, 175, 250);
+                        Console.SetCursorPosition(17, 10);
+                        Console.Write(" F ");
                         break;
                     case Note.G:
-                        Beep(finchRobot, 196, 1000);
+                        Beep(finchRobot, 196, 250);
+                        Console.SetCursorPosition(17, 10);
+                        Console.Write(" G ");
                         break;
                     case Note.DONE:
                         break;
@@ -2425,7 +2442,16 @@ namespace Project_FinchControl
         }
         static void PrintCommands(List<Note> notes)
         {
-            foreach (Note note in notes) Console.Write($" {note} | ");   
+
+            foreach (Note note in notes)
+            {
+                Console.SetCursorPosition(0, 10);
+                Console.Write($"{note}");
+                Thread.Sleep(250);
+            }
+            
+
+            
         }
         #endregion
     }
