@@ -1477,7 +1477,7 @@ namespace Project_FinchControl
                         break;
 
                     case "d":
-                        //UserProgrammingDisplayExecuteFinchCommands(finchRobot, commands, commandParameters);
+                        UserProgrammingDisplayExecuteFinchCommands(finchRobot, commands, commandParameters);
                         break;
 
                     case "q":
@@ -1510,15 +1510,17 @@ namespace Project_FinchControl
             DisplayScreenHeader("Set Command Parameters");
 
             // Prompt user
-
+            Console.WriteLine();
             commandParameters.motorSpeed = ValidIntegerAndRange("\tEnter Motor Speed [1-255]: ", 1, 255);
+            Console.WriteLine();
             commandParameters.ledBrightness = ValidIntegerAndRange("\tEnter LED Brightness [1-255]: ", 1, 255);
+            Console.WriteLine();
             commandParameters.waitSeconds = ValidDoubleAndRange("\tEnter wait in seconds (1-10): ", 0, 10);
 
             Console.WriteLine();
-            Console.WriteLine($"Motor Speed: {commandParameters.motorSpeed}");
-            Console.WriteLine($"LED Brightness: {commandParameters.ledBrightness}");
-            Console.WriteLine($"Wait command duration: {commandParameters.waitSeconds}");
+            Console.WriteLine($"\tMotor Speed: {commandParameters.motorSpeed}");
+            Console.WriteLine($"\tLED Brightness: {commandParameters.ledBrightness}");
+            Console.WriteLine($"\tWait command duration: {commandParameters.waitSeconds}");
 
             // Echo the values provided by the user
             // Return all of the values as a tuple
@@ -1555,11 +1557,10 @@ namespace Project_FinchControl
                     Console.WriteLine("\tPlease enter a command from the list above");
                 }
             }
-            // Add a while or do-while loop
-                // Prompt the user for each new command
-                // Parse, validate, and adds the new command to the command list
-                // Terminate when the user enters the "done" command
-            // Echo the user's commands (Hint: use a foreach loop)
+
+            DisplayContinuePrompt();
+
+            PrintCommands(commands);
 
             DisplayMenuPrompt("User Programming Menu");
 
@@ -1572,11 +1573,13 @@ namespace Project_FinchControl
         /// <param name="commands"></param>
         static void UserProgrammingDisplayFinchCommands(List<Command> commands)
         {
-            DisplayScreenHeader("View Commands");
+            DisplayScreenHeader("Finch Robot Commands");
 
+            PrintCommands(commands);
             // Display all commands stored in the command list
 
             DisplayMenuPrompt("User Programming Menu");
+
         }
         /// <summary>
         /// *****************************************************************
@@ -1585,14 +1588,71 @@ namespace Project_FinchControl
         /// </summary>
         /// <param name="finchRobot"></param>
         /// <param name="commands"></param>
-        static void UserProgrammingDisplayExecuteFinchCommands(Finch finchRobot, List<Command> commands)
+        static void UserProgrammingDisplayExecuteFinchCommands(
+            Finch finchRobot,
+            List<Command> commands,
+            (int motorSpeed, int ledBrightness, double waitSeconds) commandParameters)
         {
+            int motorSpeed = commandParameters.motorSpeed;
+            int ledBrightness = commandParameters.ledBrightness;
+            int waitMS = (int)(commandParameters.waitSeconds * 1000);
+            string commandFeedback = "";
+            const int TURNING_MOTOR_SPEED = 100;
+
             DisplayScreenHeader("Execute Commands");
+
+            Console.WriteLine();
+            Console.WriteLine("\t\tList of your commands:");
+            PrintCommands(commands);
+            Console.WriteLine();
+            Console.WriteLine("\tThe finch robot is ready to execute the list of commands");
+            DisplayContinuePrompt();
+
+            foreach (Command command in commands)
+            {
+                switch(command)
+                {
+                    case Command.NONE:
+                        break;
+                    case Command.MOVEFORWARD:
+                        break;
+                    case Command.MOVEBACKWARD:
+                        break;
+                    case Command.STOPMOTORS:
+                        break;
+                    case Command.WAIT:
+                        break;
+                    case Command.TURNRIGHT:
+                        break;
+                    case Command.TURNLEFT:
+                        break;
+                    case Command.LEDON:
+                        break;
+                    case Command.LEDOFF:
+                        break;
+                    case Command.GETTEMPERATURE:
+                        break;
+                    case Command.DONE:
+                        break;
+                }
+            }
             // Inform and prompt the user
             // Execute all of the commands
             // Display each command name as it is executed
 
             DisplayMenuPrompt("User Programming Menu");
+        }
+
+        static void PrintCommands(List<Command> commands)
+        {
+            int commandCount = 1;
+            Console.Write("\t|");
+            foreach (Command command in commands)
+            {
+                Console.Write($" {command} | ");
+                if (commandCount % 5 == 0) Console.Write("\n\t|");
+                commandCount++;
+            }
         }
 
         #endregion
