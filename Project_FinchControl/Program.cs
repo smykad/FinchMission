@@ -1701,7 +1701,13 @@ namespace Project_FinchControl
 
             // Display commands avaialble
 
+            DisplayCommandInstructions();
+            DisplayContinuePrompt();
+            Console.Clear();
+            Console.WriteLine();
             CommandList(commands);
+            
+            Console.WriteLine();
 
             while (command != Command.DONE)
             {
@@ -1741,6 +1747,7 @@ namespace Project_FinchControl
             // Display all commands stored in the command list
 
             PrintCommands(commands, "Your Commands");
+            
 
             DisplayMenuPrompt("User Programming Menu");
 
@@ -1885,6 +1892,38 @@ namespace Project_FinchControl
                 commandCount++;
             }
             Console.WriteLine();
+        }
+        /// <summary>
+        /// ******************************************************
+        ///         DISPLAY INSTRUCTIONS                           
+        /// ******************************************************
+        /// </summary>
+        static void DisplayCommandInstructions()
+        {
+            Console.Write(@"
+            COMMAND GUIDE:
+            **********************************************************
+            MOVEFORWARD: Move the Finch forward
+            MOVEBACKWARD: Move the Finch backwards
+            STOPMOTORS: Stop the Finch motors
+            WAIT: Pause the Finch
+            TURNRIGHT: Turn the Finch right
+            TURNLEFT: Turn the Finch left
+            LEDON: Turn the LED's on
+            LEDREDON: Turn the red LED on
+            LEDGREENON: Turn the green LED on
+            LEDBLUEON:  Turn the blue LED on
+            LEDOFF: Turn the LED's off
+            GETLIGHTSENSOR: Get current light sensor readings
+            GETTEMPERATURE: Get current temperature
+            **********************************************************
+            When programming the finch make sure to add a wait between
+            commands and a stopmotors when you want the finch to stop
+            moving.
+ 
+            Type 'done' when you are finished giving commands
+            to the finch.
+            ");
         }
 
         #endregion
