@@ -15,7 +15,7 @@ namespace Project_FinchControl
     // Description: Menus created, functions created
     // Author: Smyka, Doug
     // Dated Created: 10/4/2020
-    // Last Modified: 10/24/2020
+    // Last Modified: 10/25/2020
     //
     // **************************************************
 
@@ -32,7 +32,11 @@ namespace Project_FinchControl
             TURNRIGHT,
             TURNLEFT,
             LEDON,
+            LEDREDON,
+            LEDGREENON,
+            LEDBLUEON,
             LEDOFF,
+            GETLIGHTSENSOR,
             GETTEMPERATURE,
             DONE
         }
@@ -360,49 +364,57 @@ namespace Project_FinchControl
 
         //
         // *******************************************
-        // *    Methods for Movement of Ficnh        *
+        // *    Methods for Movement of Finch        *
         // *******************************************
 
         /// <summary>
-        /// Finch moves in a square pattern turninig right
+        /// ******************************************************
+        ///         FINCH MOVES IN SQUARE PATTERN MOVING RIGHT                               
+        /// ******************************************************
         /// </summary>
         /// <param name="finchRobot"></param>
         static void SquareRight(Finch finchRobot)
         {
             TurnRight(finchRobot);
             Forward(finchRobot, 1000);
-            Stop(finchRobot);
+            FinchStopMotors(finchRobot);
             TurnRight(finchRobot);
             Forward(finchRobot, 1000);
-            Stop(finchRobot);
+            FinchStopMotors(finchRobot);
             TurnRight(finchRobot);
             Forward(finchRobot, 1000);
-            Stop(finchRobot);
+            FinchStopMotors(finchRobot);
             TurnRight(finchRobot);
             Forward(finchRobot, 1000);
-            Stop(finchRobot);
+            FinchStopMotors(finchRobot);
         }
+
         /// <summary>
-        /// Finch moves in a square moving left
+        /// ******************************************************
+        ///         FINCH MOVES IN SQUARE PATTERN MOVING LEFT                              
+        /// ******************************************************
         /// </summary>
         /// <param name="finchRobot"></param>
         static void SquareLeft(Finch finchRobot)
         {
             TurnLeft(finchRobot);
             Forward(finchRobot, 1000);
-            Stop(finchRobot);
+            FinchStopMotors(finchRobot);
             TurnLeft(finchRobot);
             Forward(finchRobot, 1000);
-            Stop(finchRobot);
+            FinchStopMotors(finchRobot);
             TurnLeft(finchRobot);
             Forward(finchRobot, 1000);
-            Stop(finchRobot);
+            FinchStopMotors(finchRobot);
             TurnLeft(finchRobot);
             Forward(finchRobot, 1000);
-            Stop(finchRobot);
+            FinchStopMotors(finchRobot);
         }
+
         /// <summary>
-        /// Move finch forward
+        /// ******************************************************
+        ///         MOVE FINCH FORWARD                           
+        /// ******************************************************
         /// </summary>
         /// <param name="finchRobot"></param>
         /// <param name="duration"></param>
@@ -411,17 +423,11 @@ namespace Project_FinchControl
             finchRobot.setMotors(100, 100);
             Sleep(finchRobot, duration);
         }
-        /// <summary>
-        /// Stop finch
-        /// </summary>
-        /// <param name="finchRobot"></param>
-        static void Stop(Finch finchRobot)
-        {
-            finchRobot.setMotors(0, 0);
-        }
 
         /// <summary>
-        /// Turn Finch left
+        /// ******************************************************
+        ///             TURN LEFT                              
+        /// ******************************************************
         /// </summary>
         /// <param name="finchRobot"></param>
         static void TurnLeft(Finch finchRobot)
@@ -430,8 +436,11 @@ namespace Project_FinchControl
             Sleep(finchRobot, 700);
             finchRobot.setMotors(0, 0);
         }
+
         /// <summary>
-        /// Turn finch right
+        /// ******************************************************
+        ///             TURN RIGHT                              
+        /// ******************************************************
         /// </summary>
         /// <param name="finchRobot"></param>
         static void TurnRight(Finch finchRobot)
@@ -441,6 +450,145 @@ namespace Project_FinchControl
             finchRobot.setMotors(0, 0);
         }
 
+        /// <summary>
+        /// ******************************************************
+        ///          MOVE FINCH FORWARD                     
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="Motors"></param>
+        static void FinchMoveForward(Finch finchRobot, int Motors)
+        {
+            finchRobot.setMotors(Motors, Motors);
+        }
+
+        /// <summary>
+        /// ******************************************************
+        ///         MOVE FINCH BACKWARDS                              
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="Motors"></param>
+        static void FinchMoveBackwards(Finch finchRobot, int Motors)
+        {
+            finchRobot.setMotors(-Motors, -Motors);
+        }
+
+        /// <summary>
+        /// ******************************************************
+        ///         STOP FINCH MOTORS                              
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        static void FinchStopMotors(Finch finchRobot)
+        {
+            finchRobot.setMotors(0, 0);
+        }
+
+        /// <summary>
+        /// ******************************************************
+        ///         FINCH WAIT                              
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="ms"></param>
+        static void FinchWait(Finch finchRobot, int ms)
+        {
+            finchRobot.wait(ms);
+        }
+
+        /// <summary>
+        /// ******************************************************
+        ///         ALL LEDS ON                             
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="rgb"></param>
+        static void FinchAllLEDOn(Finch finchRobot, int rgb )
+        {
+            finchRobot.setLED(rgb, rgb, rgb);
+        }
+
+        /// <summary>
+        /// ******************************************************
+        ///         RED LED ON                            
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="r"></param>
+        static void FinchRedLEDOn(Finch finchRobot, int r)
+        {
+            finchRobot.setLED(r, 0, 0);
+        }
+
+        /// <summary>
+        /// ******************************************************
+        ///         GREEN LED ON                              
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="g"></param>
+        static void FinchGreenLEDOn(Finch finchRobot, int g)
+        {
+            finchRobot.setLED(0, g, 0);
+        }
+
+        /// <summary>
+        /// ******************************************************
+        ///         BLUE LED ON                               
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="b"></param>
+        static void FinchBlueLEDOn(Finch finchRobot, int b)
+        {
+            finchRobot.setLED(0, 0, b);
+        }
+
+        /// <summary>
+        /// ******************************************************
+        ///         LED OFF                               
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        static void FinchLEDOff(Finch finchRobot)
+        {
+            finchRobot.setLED(0, 0, 0);
+        }
+
+        /// <summary>
+        /// ******************************************************
+        ///         TURN RIGHT                               
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        static void FinchTurnRight(Finch finchRobot)
+        {
+            finchRobot.setMotors(100, -100);
+        }
+
+        /// <summary>
+        /// ******************************************************
+        ///         TURN LEFT                              
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        static void FinchTurnLeft(Finch finchRobot)
+        {
+            finchRobot.setMotors(-100, 100);
+        }
+
+        /// <summary>
+        /// ******************************************************
+        ///     STOP MOVEMENT, TURN OFF LIGHTS                               
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        static void FinchDONE(Finch finchRobot)
+        {
+            FinchStopMotors(finchRobot);
+            FinchLEDOff(finchRobot);
+        }
 
         #endregion
 
@@ -477,6 +625,7 @@ namespace Project_FinchControl
             LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
             Motors(finchRobot, 50, 50);
         }
+
         /// <summary>
         /// *********************************************************
         /// *       Star Wars Song with lights no movement          *
@@ -503,8 +652,6 @@ namespace Project_FinchControl
             LEDOnOFFSleep(finchRobot, 255, 0, 0, 50);
             
         }
-
-
 
         /// <summary>
         /// ******************************************************
@@ -681,7 +828,6 @@ namespace Project_FinchControl
         /// *****************************************************************
         /// </summary>
         /// <param name="finchRobot">finch robot object</param>
-
         static void DisplayDataRecorderMenuScreen(Finch finchRobot)
         {
             DisplayScreenHeader("Data Recorder");
@@ -752,9 +898,6 @@ namespace Project_FinchControl
 
         }
 
-
-
-
         /// <summary>
         /// *********************************************************
         /// *       DATA RECORDER > DATA POINTS                     *
@@ -773,7 +916,6 @@ namespace Project_FinchControl
             return numberOfDataPoints;
 
         }
-
 
         /// <summary>
         /// *********************************************************
@@ -829,6 +971,7 @@ namespace Project_FinchControl
             return temperatures;
 
         }
+
         /// <summary>
         /// *********************************************************
         /// *       DATA RECORDER > GET LIGHT SENSOR DATA           *
@@ -864,6 +1007,7 @@ namespace Project_FinchControl
             DisplayMenuPrompt("Data Recorder Menu");
             return lights;
         }
+
         /// <summary>
         /// ********************************************************
         /// *       DATA RECORDER > DISPLAY DATA                   *
@@ -878,7 +1022,6 @@ namespace Project_FinchControl
 
             DisplayMenuPrompt("Data Recorder Menu");
         }
-
 
         /// <summary>
         /// ********************************************************
@@ -960,8 +1103,7 @@ namespace Project_FinchControl
         /// *                      ALARM SYSTEM                            *
         /// *****************************************************************
         /// </summary>
-        /// <param name="finchRobot">finch robot object</param>
-
+        /// <param name="finchRobot">finch robot object</param>        
         static void DisplayAlarmSystemMenuScreen(Finch finchRobot)
         {
             //
@@ -1430,7 +1572,6 @@ namespace Project_FinchControl
         /// *****************************************************************
         /// </summary>
         /// <param name="finchRobot">finch robot object</param>
-
         static void DisplayUserProgrammingMenuScreen(Finch finchRobot)
         {
 
@@ -1515,7 +1656,6 @@ namespace Project_FinchControl
         /// *****************************************************************
         /// </summary>
         /// 
-        // parameters will be:  
         static (int motorSpeed, int ledBrightness, double waitSeconds) UserProgrammingDisplayGetCommandParameters()
         {
             (int motorSpeed, int ledBrightness, double waitSeconds) commandParameters;
@@ -1533,15 +1673,17 @@ namespace Project_FinchControl
             Console.WriteLine();
             commandParameters.waitSeconds = ValidDoubleAndRange("\tEnter wait in seconds (1-10): ", 0, 10);
 
+            // Echo the values provided by the user
+
             Console.WriteLine();
             Console.WriteLine($"\tMotor Speed: {commandParameters.motorSpeed}");
             Console.WriteLine($"\tLED Brightness: {commandParameters.ledBrightness}");
             Console.WriteLine($"\tWait command duration: {commandParameters.waitSeconds}");
-
-            // Echo the values provided by the user
-            // Return all of the values as a tuple
+            
 
             DisplayMenuPrompt("User Programming Menu");
+
+            // Return all of the values as a tuple
 
             return commandParameters;
         }
@@ -1557,8 +1699,9 @@ namespace Project_FinchControl
 
             DisplayScreenHeader("Finch Robot Commands");
 
+            // Display commands avaialble
 
-            // Display instructions for user
+            CommandList(commands);
 
             while (command != Command.DONE)
             {
@@ -1570,13 +1713,17 @@ namespace Project_FinchControl
                 }
                 else
                 {
+                    Console.WriteLine();
                     Console.WriteLine("\tPlease enter a command from the list above");
+                    Console.WriteLine();
                 }
             }
 
             DisplayContinuePrompt();
 
-            PrintCommands(commands);
+            // Display commands entered
+
+            PrintCommands(commands, "Your Commands");
 
             DisplayMenuPrompt("User Programming Menu");
 
@@ -1591,8 +1738,9 @@ namespace Project_FinchControl
         {
             DisplayScreenHeader("Finch Robot Commands");
 
-            PrintCommands(commands);
             // Display all commands stored in the command list
+
+            PrintCommands(commands, "Your Commands");
 
             DisplayMenuPrompt("User Programming Menu");
 
@@ -1613,62 +1761,130 @@ namespace Project_FinchControl
             int ledBrightness = commandParameters.ledBrightness;
             int waitMS = (int)(commandParameters.waitSeconds * 1000);
             string commandFeedback = "";
-            const int TURNING_MOTOR_SPEED = 100;
 
             DisplayScreenHeader("Execute Commands");
 
-            Console.WriteLine();
-            Console.WriteLine("\t\tList of your commands:");
-            PrintCommands(commands);
+            // Display all commands stored in the command list
+
+            PrintCommands(commands, "Your Commands");
+
+            // Inform and prompt the user
+
             Console.WriteLine();
             Console.WriteLine("\tThe finch robot is ready to execute the list of commands");
             DisplayContinuePrompt();
+            Console.Clear();
+            Console.WriteLine();
+
+            // Execute all of the commands
 
             foreach (Command command in commands)
             {
                 switch(command)
                 {
                     case Command.NONE:
+                        commandFeedback = Command.NONE.ToString();
                         break;
                     case Command.MOVEFORWARD:
+                        FinchMoveForward(finchRobot, motorSpeed);
+                        commandFeedback = Command.MOVEFORWARD.ToString();
                         break;
                     case Command.MOVEBACKWARD:
+                        FinchMoveBackwards(finchRobot, motorSpeed);
+                        commandFeedback = Command.MOVEBACKWARD.ToString();
                         break;
                     case Command.STOPMOTORS:
+                        FinchStopMotors(finchRobot);
+                        commandFeedback = Command.STOPMOTORS.ToString();
                         break;
                     case Command.WAIT:
+                        FinchWait(finchRobot, waitMS);
+                        commandFeedback = Command.WAIT.ToString();
                         break;
                     case Command.TURNRIGHT:
+                        FinchTurnRight(finchRobot);
+                        commandFeedback = Command.TURNRIGHT.ToString();
                         break;
                     case Command.TURNLEFT:
+                        FinchTurnLeft(finchRobot);
+                        commandFeedback = Command.TURNLEFT.ToString();
                         break;
                     case Command.LEDON:
+                        FinchAllLEDOn(finchRobot, ledBrightness);
+                        commandFeedback = Command.LEDON.ToString();
+                        break;
+                    case Command.LEDREDON:
+                        FinchRedLEDOn(finchRobot, ledBrightness);
+                        commandFeedback = Command.LEDREDON.ToString();
+                        break;
+                    case Command.LEDGREENON:
+                        FinchGreenLEDOn(finchRobot, ledBrightness);
+                        commandFeedback = Command.LEDGREENON.ToString();
+                        break;
+                    case Command.LEDBLUEON:
+                        FinchBlueLEDOn(finchRobot, ledBrightness);
+                        commandFeedback = Command.LEDBLUEON.ToString();
                         break;
                     case Command.LEDOFF:
+                        FinchLEDOff(finchRobot);
+                        commandFeedback = Command.LEDOFF.ToString();
+                        break;
+                    case Command.GETLIGHTSENSOR:
+                        commandFeedback = LightSensorsAverage(finchRobot, "Light sensor value:");
                         break;
                     case Command.GETTEMPERATURE:
+                        commandFeedback = GetTempNow(finchRobot, "Temperature: ");
                         break;
                     case Command.DONE:
+                        FinchDONE(finchRobot);
+                        commandFeedback = Command.DONE.ToString();
                         break;
                 }
-            }
-            // Inform and prompt the user
-            // Execute all of the commands
-            // Display each command name as it is executed
 
+                // Display each command name as it is executed
+
+                Console.WriteLine($"\t{commandFeedback}");
+                FinchWait(finchRobot, waitMS);
+            }
+
+            Console.WriteLine();
             DisplayMenuPrompt("User Programming Menu");
         }
-
-        static void PrintCommands(List<Command> commands)
+        /// <summary>
+        /// ******************************************************
+        ///         PRINT USER COMMANDS                             
+        /// ******************************************************
+        /// </summary>
+        /// <param name="commands"></param>
+        /// <param name="info"></param>
+        static void PrintCommands(List<Command> commands, string info)
         {
             int commandCount = 1;
-            Console.Write("\t|");
+            Console.WriteLine();
+            Console.WriteLine($"\t{info}");
+            Console.WriteLine();
+            Console.Write("\t");
             foreach (Command command in commands)
             {
-                Console.Write($" {command} | ");
-                if (commandCount % 5 == 0) Console.Write("\n\t|");
+                Console.Write($"| {command} | ");
+                if (commandCount % 5 == 0) Console.Write("\n\t");
                 commandCount++;
             }
+            Console.WriteLine();
+        }
+        static void CommandList(List<Command> commands)
+        {
+            int commandCount = 1;
+            Console.WriteLine("\tList of Available Commands");
+            Console.WriteLine();
+            Console.Write("\t");
+            foreach(string commandName in Enum.GetNames(typeof(Command)))
+            {
+                Console.Write($"| {commandName.ToLower()} | ");
+                if (commandCount % 5 == 0) Console.Write("\n\t");
+                commandCount++;
+            }
+            Console.WriteLine();
         }
 
         #endregion
@@ -1802,6 +2018,7 @@ namespace Project_FinchControl
         static void DisplayScreenHeader(string headerText)
         {
             Console.Clear();
+            Console.CursorVisible = false;
             Console.WriteLine();
             Console.WriteLine("\t" + headerText);
             Console.WriteLine();
@@ -2135,6 +2352,13 @@ namespace Project_FinchControl
                 Console.WriteLine(string.Format($"\tRight Sensor: {lights[0][1]}"));    
             }
         }
+        /// <summary>
+        /// ******************************************************
+        ///         GET CURRENT LEFT SENSOR VALUE                               
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <returns></returns>
         static int GetCurrentLeftSensorValue(Finch finchRobot)
         {
             int leftsensor = finchRobot.getLeftLightSensor();
@@ -2180,6 +2404,22 @@ namespace Project_FinchControl
         }
         /// <summary>
         /// ******************************************************
+        ///         LIGHT SENSOR AVERAGE FOR USER PROGRAMMING                               
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        static string LightSensorsAverage(Finch finchRobot, string info)
+        {
+            string lightSensorAvg;
+            double lightSensorsNow = ((GetCurrentLeftSensorValue(finchRobot) + GetCurrentRightSensorValue(finchRobot)) / 2 );
+            lightSensorsNow = CelciusConversion(lightSensorsNow);
+            lightSensorAvg = $"{info} {lightSensorsNow.ToString("n2")}";
+            return lightSensorAvg;
+        }
+        /// <summary>
+        /// ******************************************************
         ///         GET CURRENT TEMPERATURE                               
         /// ******************************************************
         /// </summary>
@@ -2191,9 +2431,24 @@ namespace Project_FinchControl
             temp = CelciusConversion(temp);
             return temp;
         }
+        /// <summary>
+        /// ******************************************************
+        ///         OVERLOAD GETTEMPNOW FOR USER PROGRAMMING                              
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="display"></param>
+        /// <returns></returns>
+        static string GetTempNow(Finch finchRobot, string display)
+        {
+            double temp = finchRobot.getTemperature();
+            temp = CelciusConversion(temp);
+            string print = $"{display} {temp.ToString("n2")}";
+            return print;
+        }
 
         #endregion
-        
+
         #region UNUSED METHODS
         /// <summary>
         /// ******************************************************
@@ -2305,8 +2560,14 @@ namespace Project_FinchControl
             }
         }
         #endregion
-        
+
         #region SONGMAKER
+        /// <summary>
+        /// ******************************************************
+        ///             SONG MAKER MENU
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
         static void DisplaySongMenu(Finch finchRobot)
         {
             List<Note> notes = new List<Note>();
@@ -2358,10 +2619,26 @@ namespace Project_FinchControl
             } while (!quitMenu);
 
         }
+        /// <summary>
+        /// ******************************************************
+        ///             SONG MAKER MENU  >  GET SONG
+        /// ******************************************************
+        /// </summary>
+        /// <param name="notes"></param>
         static void GetSong(List<Note> notes)
         {
+            
             Note note = Note.NONE;
+
+            // Display header
+
             DisplayScreenHeader("Set Notes for Song");
+
+            // Display list of available notes
+
+            CommandList(notes);
+
+            // Prompt user for notes
 
             while (note != Note.DONE)
             {
@@ -2373,22 +2650,33 @@ namespace Project_FinchControl
                 }
                 else
                 {
+                    Console.WriteLine();
                     Console.WriteLine("\tPlease enter a note from the list above");
+                    Console.WriteLine();
                 }
             }
 
-            PrintCommands(notes);
-            
+            // Echo list of notes
 
+            PrintCommands(notes);
+
+            Console.WriteLine();
             DisplayMenuPrompt("Song Maker Menu");
         }
+        /// <summary>
+        /// ******************************************************
+        ///             SONG MAKER MENU  >  PLAY SONG
+        /// ******************************************************
+        /// </summary>
+        /// <param name="finchRobot"></param>
+        /// <param name="notes"></param>
         static void PlaySong(Finch finchRobot, List<Note> notes)
         {
             DisplayScreenHeader("Your song");
             Console.WriteLine("\tThe Finch will now sing your song!");
             DisplayContinuePrompt();
-            Console.Clear();
-            Console.SetCursorPosition(0, 10);
+            Console.WriteLine();
+            Console.Write("\t");
 
             foreach (Note note in notes)
             {
@@ -2398,37 +2686,30 @@ namespace Project_FinchControl
                         break;
                     case Note.A:
                         Beep(finchRobot, 220, 250);
-                        Console.SetCursorPosition(17, 10);
                         Console.Write(" A ");
                         break;
                     case Note.B:
                         Beep(finchRobot, 247, 250);
-                        Console.SetCursorPosition(17, 10);
                         Console.Write(" B ");
                         break;
                     case Note.C:
                         Beep(finchRobot, 131, 250);
-                        Console.SetCursorPosition(17, 10);
                         Console.Write(" C ");
                         break;
                     case Note.D:
                         Beep(finchRobot, 147, 250);
-                        Console.SetCursorPosition(17, 10);
                         Console.Write(" D ");
                         break;
                     case Note.E:
                         Beep(finchRobot, 165, 250);
                         Console.Write(" E ");
-                        Console.SetCursorPosition(17, 10);
                         break;
                     case Note.F:
                         Beep(finchRobot, 175, 250);
-                        Console.SetCursorPosition(17, 10);
                         Console.Write(" F ");
                         break;
                     case Note.G:
                         Beep(finchRobot, 196, 250);
-                        Console.SetCursorPosition(17, 10);
                         Console.Write(" G ");
                         break;
                     case Note.DONE:
@@ -2437,21 +2718,47 @@ namespace Project_FinchControl
 
                 
             }
-
+            Console.WriteLine();
             DisplayMenuPrompt("Song Maker Menu");
         }
+        /// <summary>
+        /// ******************************************************
+        ///         OVERLOAD PRINTCOMMANDS FOR SONG MAKER                        
+        /// ******************************************************
+        /// </summary>
+        /// <param name="notes"></param>
         static void PrintCommands(List<Note> notes)
         {
-
+            int noteCount = 1;
+            Console.WriteLine();
+            Console.Write("\t| ");
             foreach (Note note in notes)
             {
-                Console.SetCursorPosition(0, 10);
-                Console.Write($"{note}");
-                Thread.Sleep(250);
+                Console.Write($"{note} | ");
+                if (noteCount % 10 == 0) Console.Write("\n\t| ");
+                noteCount++;
+            } 
+        }
+        /// <summary>
+        /// ******************************************************
+        ///         OVERLOAD COMMANDLIST FOR SONG MAKER                        
+        /// ******************************************************
+        /// 
+        /// </summary>
+        /// <param name="notes"></param>
+        static void CommandList(List<Note> notes)
+        {
+            
+            Console.WriteLine("\tList of Available Notes");
+            Console.WriteLine();
+            Console.Write("\t|");
+            foreach (string noteName in Enum.GetNames(typeof(Note)))
+            {
+                Console.Write($" {noteName} | ");
+                
             }
-            
-
-            
+            Console.WriteLine();
+            Console.WriteLine();
         }
         #endregion
     }
