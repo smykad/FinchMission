@@ -5,6 +5,7 @@ using FinchAPI;
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Project_FinchControl
 {
@@ -3011,8 +3012,6 @@ namespace Project_FinchControl
                 userName = Console.ReadLine();
                 validUserName = isValidUserName(userName);
 
-                Console.ReadKey();
-
             } while (validUserName);
 
             return userName;
@@ -3059,7 +3058,11 @@ namespace Project_FinchControl
             }
 
         }
-
+        /// <summary>
+        /// ******************************************************
+        ///             Display Credentials
+        /// ******************************************************
+        /// </summary>
         static void DisplayCredentials()
         {
             DisplayScreenHeader("User Names and Passwords");
@@ -3122,7 +3125,6 @@ namespace Project_FinchControl
         }
 
         #endregion
-
 
     }
 }
