@@ -4,6 +4,7 @@ using System.IO;
 using FinchAPI;
 using System.Threading;
 using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace Project_FinchControl
 {
@@ -15,7 +16,7 @@ namespace Project_FinchControl
     // Description: Menus created, functions created
     // Author: Smyka, Doug
     // Dated Created: 10/4/2020
-    // Last Modified: 10/25/2020
+    // Last Modified: 11/7/2020
     //
     // **************************************************
 
@@ -62,6 +63,7 @@ namespace Project_FinchControl
 
             SetTheme();
 
+            DisplayLoginRegister();
             DisplayWelcomeScreen();
             DisplayMenuScreen();
             DisplayClosingScreen();
@@ -107,7 +109,8 @@ namespace Project_FinchControl
                 Console.WriteLine("\tC: Data Recorder");
                 Console.WriteLine("\tD: Alarm System");
                 Console.WriteLine("\tE: User Programming");
-                Console.WriteLine("\tF: Disconnect Finch Robot");
+                Console.WriteLine("\tF: Stored Users and Passwords");
+                Console.WriteLine("\tG: Disconnect Finch Robot");
                 Console.WriteLine("\tQ: Quit");
                 Console.WriteLine();
                 Console.WriteLine();
@@ -138,8 +141,11 @@ namespace Project_FinchControl
                     case "e":
                         DisplayUserProgrammingMenuScreen(finchRobot);
                         break;
-
                     case "f":
+                        DisplayCredentials();
+                        break;
+
+                    case "g":
                         DisplayDisconnectFinchRobot(finchRobot);
                         break;
 
@@ -2800,5 +2806,323 @@ namespace Project_FinchControl
             Console.WriteLine();
         }
         #endregion
+
+        #region System I/0
+
+
+        /// <summary>
+        /// ******************************************************
+        ///             LOGIN OR REGISTER MENU
+        /// ******************************************************
+        /// </summary>
+        static void DisplayLoginRegister()
+        {
+            DisplayScreenHeader("Login/Register");
+
+            Console.Write("\tAre you a registered user?  [Yes/No] ");
+            string userResponse = Console.ReadLine().ToLower();
+            if (userResponse == "yes" || userResponse == "y")
+            {
+                DisplayLogin();
+            }
+            else
+            {
+                DisplayRegisterUser();
+                DisplayLogin();
+            }
+        }
+        /// <summary>
+        /// ******************************************************
+        ///             REGISTER USER            
+        /// ******************************************************
+        /// </summary>
+        static void DisplayRegisterUser()
+        {
+            string userName;
+            string password;
+            string encryptedPassword;
+            int key;
+
+            DisplayScreenHeader("Register");
+
+            userName = GetUserName();
+            Console.Write("\tEnter your password: ");
+            password = Console.ReadLine();
+            key = ValidIntegerAndRange("\tEnter a cipher value between 1 and 26: ", 1, 26);         
+            encryptedPassword = Encrypt(password, key);
+            
+
+            WriteLoginInfoData(userName, encryptedPassword);
+            WriteUserNameInfoData(userName);
+
+            Console.WriteLine();
+            Console.WriteLine("\tYour login credentials are as followed: ");
+            Console.WriteLine($"\tUser name: {userName}");
+            Console.WriteLine($"\tPassword: {password}");
+            Console.WriteLine($"\tYour key: {key}");
+            Console.WriteLine($"\tEncrypted Password: {encryptedPassword}");
+
+            DisplayContinuePrompt();
+        }
+        /// <summary>
+        /// ******************************************************
+        ///             WRITE LOGIN INFO DATA
+        /// ******************************************************
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        static void WriteLoginInfoData(string userName, string password)
+        {
+            string dataPath = @"Data/Logins.txt";
+            string loginInfoText = userName + "," + password + "\n";
+
+            File.AppendAllText(dataPath, loginInfoText);
+        }
+        /// <summary>
+        /// ******************************************************
+        ///             DISPLAY LOGIN
+        /// ******************************************************
+        /// </summary>
+        static void DisplayLogin()
+        {
+            string userName;
+            string password;
+            string encryptedPassword;
+            int key;
+            bool validLogin;
+
+
+            do
+            {
+                DisplayScreenHeader("Login");
+
+                Console.WriteLine();
+                Console.Write("\tEnter your user name: ");
+                userName = Console.ReadLine();
+                Console.Write("\tEnter password: ");
+                password = Console.ReadLine();
+                Console.Write("\tEnter Key: ");
+                key = IsValidInt();
+                encryptedPassword = Encrypt(password, key);
+
+                validLogin = isValidLoginInfo(userName, encryptedPassword);
+
+                Console.WriteLine();
+                if (validLogin)
+                {
+                    Console.WriteLine($"\tYou are now logged in {userName}");
+                    DisplayContinuePrompt();
+                }
+                else
+                {
+                    DisplayContinuePrompt();
+                }
+
+            } while (!validLogin);
+        }
+        /// <summary>
+        /// ******************************************************
+        ///             VALIDATE LOGIN CREDENTIALS
+        /// ******************************************************
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        static bool isValidLoginInfo(string userName, string password)
+        {
+            List<(string userName, string password)> registeredUserLoginInfo = new List<(string userName, string password)>();
+            bool validUser = false;
+
+            registeredUserLoginInfo = ReadLoginInfoData();
+
+            foreach ((string userName, string password) userLoginInfo in registeredUserLoginInfo)
+            {
+                if ((userLoginInfo.userName == userName) && (userLoginInfo.password == password))
+                {
+                    validUser = true;
+                    break;
+                }
+            }
+
+            if (!validUser)
+            {
+                Console.WriteLine("\tWrong login credentials");
+            }
+            return validUser;
+        }
+
+        /// <summary>
+        /// ******************************************************
+        ///             READ LOGIN INFO DATA
+        /// ******************************************************
+        /// </summary>
+        /// <returns></returns>
+        static List<(string userName, string password)> ReadLoginInfoData()
+        {
+            string dataPath = @"Data/Logins.txt";
+
+
+            string[] loginInfoArray;
+            (string userName, string password) loginInfoTuple;
+
+            List<(string userName, string password)> registeredUserLoginInfo = new List<(string userName, string password)>();
+
+            loginInfoArray = File.ReadAllLines(dataPath);
+
+            foreach (string loginInfoText in loginInfoArray)
+            {
+                loginInfoArray = loginInfoText.Split(',');
+
+                loginInfoTuple.userName = loginInfoArray[0];
+                loginInfoTuple.password = loginInfoArray[1];
+
+                registeredUserLoginInfo.Add(loginInfoTuple);
+            }
+
+            return registeredUserLoginInfo;
+
+        }
+        /// <summary>
+        /// ******************************************************
+        ///             WRITE USER NAMES TO FILE
+        /// ******************************************************
+        /// </summary>
+        /// <param name="userName"></param>
+        static void WriteUserNameInfoData(string userName)
+        {
+            string dataPath = @"Data/UserNames.txt";
+            string userNames = userName + "\n";
+
+            File.AppendAllText(dataPath, userNames);
+        }
+        /// <summary>
+        /// ******************************************************
+        ///             GET USER NAME AND SEE IF IT'S TAKEN
+        /// ******************************************************
+        /// </summary>
+        /// <returns></returns>
+        static string GetUserName()
+        {
+            bool validUserName;
+            string userName;
+            do
+            {
+                Console.Write("\tEnter user name: ");
+                userName = Console.ReadLine();
+                validUserName = isValidUserName(userName);
+
+                Console.ReadKey();
+
+            } while (validUserName);
+
+            return userName;
+        }
+        /// <summary>
+        /// ******************************************************
+        ///             CHECK IF USERNAME EXISTS ALREADY
+        /// ******************************************************
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        static bool isValidUserName(string userName)
+        {
+            string dataPath = @"Data/UserNames.txt";
+            bool validUserName = File.ReadLines(dataPath).Contains(userName);
+            if (validUserName)
+            {
+                Console.WriteLine($"\tUser name already taken.");
+            }
+            return validUserName;
+        }
+        /// <summary>
+        /// ******************************************************
+        ///             DISPLAY USERNAMES AND ENCRYPTED PASSWORDS
+        /// ******************************************************
+        /// </summary>
+        static void TableofUserNames()
+        {
+            string dataPath = @"Data\Logins.txt";
+
+            string[] loginInfoArray;
+            (string userName, string password) loginInfoTuple;
+
+            loginInfoArray = File.ReadAllLines(dataPath);
+
+            Console.WriteLine(string.Format($"\t{"User Name",10} \t {"Password",20}"));
+            Console.WriteLine();
+            foreach (string loginInfoText in loginInfoArray)
+            {
+                loginInfoArray = loginInfoText.Split(',');
+
+                Console.WriteLine(string.Format($"\t{ loginInfoTuple.userName = loginInfoArray[0],10} \t {loginInfoTuple.password = loginInfoArray[1],20}"));
+
+            }
+
+        }
+
+        static void DisplayCredentials()
+        {
+            DisplayScreenHeader("User Names and Passwords");
+            TableofUserNames();
+            DisplayMenuPrompt("Main Menu");
+        }
+        #endregion
+
+        #region Cipher
+        /// <summary>
+        /// ******************************************************
+        ///             CHIPHER METHOD
+        /// ******************************************************
+        /// </summary>
+        /// <param name="ch"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static char CaesarCipher(char ch, int key)
+        {
+            if (!char.IsLetter(ch))
+            {
+
+                return ch;
+            }
+
+            char d = char.IsUpper(ch) ? 'A' : 'a';
+            return (char)((((ch + key) - d) % 26) + d);
+
+
+        }
+        /// <summary>
+        /// ******************************************************
+        ///             ENCRYPTION
+        /// ******************************************************
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+
+        public static string Encrypt(string input, int key)
+        {
+            string output = string.Empty;
+
+            foreach (char ch in input)
+                output += CaesarCipher(ch, key);
+
+            return output;
+        }
+        /// <summary>
+        /// ******************************************************
+        ///             DECRYPTION
+        /// ******************************************************
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static string Decrypt(string input, int key)
+        {
+            return Encrypt(input, 26 - key);
+        }
+
+        #endregion
+
+
     }
 }
